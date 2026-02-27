@@ -2,6 +2,29 @@
 
 # 1. Motivation
 
+## 1.1 Problem Statement
+
+As education increasingly shifts toward digital and hybrid formats, learning management systems have become essential tools for course delivery. However, many existing platforms function primarily as content repositories rather than interactive, personalized learning environments. Educators often upload lecture slides, PDFs, and recorded videos, but meaningful engagement tools and integrated feedback mechanisms are limited. Students may struggle to track their progress, stay motivated, or receive timely insights into their performance.
+
+In addition, educators frequently rely on multiple disconnected systems for content hosting, assignment submission, grading, communication, and deadline management. This fragmentation increases administrative workload and creates inefficiencies. The lack of integration between content delivery, assessment, analytics, and discussion tools results in a disjointed learning experience for both teachers and students.
+
+## 1.2 Rationale and Significance
+
+The proposed Personalized Learning Platform addresses these challenges by consolidating essential educational features into a unified system. It integrates user authentication with role-based access control, course creation and management, interactive quizzes and assignments, progress tracking, discussion forums, calendar integration, and certificate generation.
+
+By leveraging PostgreSQL for structured data and cloud storage for scalable content management, the system ensures reliability, organization, and performance. Automated grading and analytics dashboards provide data-driven insights into student performance, helping educators make informed instructional decisions. Students benefit from clear visibility into deadlines, grades, and completion status, which supports accountability and engagement.
+
+This project is worth pursuing because digital learning continues to expand, yet there remains a need for platforms that prioritize usability, personalization, and integration. Developing this system demonstrates practical full-stack engineering skills while solving a real-world problem in modern education.
+
+## 1.3 Target User Groups
+
+The primary users are educators and students. Educators need efficient tools to create courses, manage materials, evaluate assignments, and monitor progress. Students require structured learning paths, interactive content, timely feedback, and collaborative spaces for discussion. Educational institutions and training organizations may also benefit from a scalable and centralized learning solution.
+
+## 1.4 EReview of Existing Solutions
+
+Platforms such as Moodle, Canvas, and Google Classroom provide course management capabilities but often emphasize administrative organization over personalized engagement. Interfaces can be complex, customization may be limited, and analytics features are not always deeply integrated.
+
+This project aims to bridge these gaps by delivering a streamlined, interactive, and data-informed personalized learning environment.
 
 # 2. Objective and Key Features  
 
