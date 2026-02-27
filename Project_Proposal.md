@@ -256,6 +256,22 @@ Each course includes a discussion forum supports live and real-time updates with
 
 ### 2.3.7. Assignment Submission and Grading  
 
+Students can:
+
+- Submit text-based responses.
+- Upload assignment files (PDF, images, documents).
+- View submission status (submitted, late, graded).
+- Receive grades and written feedback.
+
+Teachers can:
+
+- View all submissions for an assignment.
+- Download submitted files.
+- Assign grades and provide feedback.
+- Update grades if necessary.
+
+Validations:
+
 - File type validation (PDF, JPG, PNG only).
 - File size limit enforcement (e.g., max 10MB).
 - Prevent duplicate submissions if policy requires.
@@ -292,6 +308,19 @@ This feature demonstrates secure file handling, relational integrity, backend va
 ---
 
 ### 2.3.8. Calendar Integration for Deadlines  
+
+Teachers can:
+
+- Set assignment deadlines.
+- Modify deadlines when necessary.
+
+Students can:
+
+- View upcoming deadlines on dashboard.
+- See countdown indicators.
+- Export deadlines via downloadable `.ics` calendar file.
+
+Validations:
 
 - Deadline stored in UTC to avoid timezone conflicts.
 - Prevent invalid dates (past deadline during creation).
@@ -366,24 +395,140 @@ This approach prevents database bloat and aligns with modern scalable applicatio
 
 ---
 
-## 2.3. Alignment with Course Requirements  
+## 2.4. Alignment with Course Requirements  
 
-This project satisfies all core requirements:
+This project satisfies all core course technical requirements through a combination of full-stack architecture, structured data modeling, secure file handling, and advanced backend logic.
 
-- TypeScript (frontend and backend)
-- Next.js Full-Stack (App Router)
-- Tailwind CSS + shadcn/ui
-- PostgreSQL relational database
-- Cloud storage integration
-- At least two advanced features:
-  - Authentication & Authorization
-  - Real-Time Functionality
-  - File Handling & Processing
-  - Advanced State Management
+Advanced backend logic includes at least two of the following:
+
+- Authentication & Authorization
+- Real-Time Functionality
+- File Handling & Processing
+- Advanced State Management
+
+### Full-Stack TypeScript Implementation
+
+The entire application is built using TypeScript across both frontend and backend layers.  
+Type safety ensures:
+
+- Strongly typed API contracts between frontend and backend.
+- Reduced runtime errors through compile-time validation.
+- Clear interface definitions for database entities and request/response structures.
+- Maintainable and scalable code architecture.
+
+This demonstrates mastery of modern strongly-typed full-stack development practices.
 
 ---
 
-## 2.4. Discussion of project scope and feasibility within the timeframe
+### Next.js App Router Architecture
+
+The project adopts the Next.js Full-Stack App Router model, which includes:
+
+- Server Components for secure server-side data fetching.
+- Server Actions for mutations such as assignment submission and grading.
+- Route Handlers (`/api/*`) for file uploads, certificate generation, and calendar exports.
+- Middleware for role-based access control.
+
+This architecture demonstrates:
+
+- Separation of concerns between client and server.
+- Secure server-side logic execution.
+- Efficient rendering and state management.
+
+---
+
+### PostgreSQL Relational Database with Normalized Schema
+
+The system uses PostgreSQL with a normalized relational schema to support:
+
+- Many-to-many relationships (students ↔ courses).
+- One-to-many relationships (course → assignments → submissions).
+- Aggregation queries for grade averages and progress tracking.
+- Referential integrity via foreign keys and constraints.
+
+Complex relational queries are required for:
+
+- Computing course completion percentages.
+- Validating assignment eligibility.
+- Aggregating grades for analytics dashboards.
+- Verifying completion criteria before certificate generation.
+
+This demonstrates competency in structured data modeling and relational database design beyond simple CRUD storage.
+
+---
+
+### Cloud Storage Integration
+
+Educational materials, assignment submissions, and generated certificates are stored in cloud object storage.
+
+The system includes:
+
+- Secure upload endpoints.
+- File type and size validation.
+- Storage of file metadata in PostgreSQL.
+- Controlled access to private submission files.
+
+This separation of file storage from structured relational data reflects industry best practices and demonstrates understanding and usage of scalable architecture design.
+
+---
+
+### Role-Based Authentication and Authorization
+
+The application implements secure authentication and authorization logic.
+
+Features include:
+
+- Password hashing and secure session handling.
+- Role-based access control (Teacher vs Student).
+- Protected API routes.
+- Validation to prevent unauthorized grading or submission access.
+
+This demonstrates secure system design and backend enforcement of business logic constraints.
+
+---
+
+### Secure File Upload and Processing
+
+Assignment submission and certificate generation involve:
+
+- Server-side validation of uploaded files.
+- Integration between API routes and cloud storage.
+- Metadata tracking in PostgreSQL.
+- Controlled file retrieval logic.
+
+These features extend beyond simple form submission and require backend orchestration across multiple services.
+
+---
+
+### Complex Relational Queries and State Management
+
+The system performs non-trivial database queries and derived state computation, including:
+
+- Deadline aggregation and countdown calculations.
+- Average grade computation.
+- Submission status tracking.
+- Completion validation for certificate eligibility.
+
+This demonstrates advanced backend data processing and state management rather than simple record retrieval.
+
+---
+
+### Advanced Features Beyond CRUD
+
+The platform includes multiple advanced features that extend beyond basic Create-Read-Update-Delete functionality:
+
+- Calendar integration for deadlines (time-based aggregation and file generation).
+- Certificate generation upon completion (PDF generation and conditional validation).
+- Assignment grading workflows with role restrictions and validation.
+- Real-time discussion forum updates via WebSocket integration.
+
+Each of these features requires backend validation, relational modeling, and cross-layer coordination between database, server logic, and UI components.
+
+Together, these implementations demonstrate comprehensive understanding of full-stack system design, structured data modeling, secure backend processing, and scalable architecture — fully satisfying the technical requirements. Each advanced feature extends beyond basic CRUD operations and demonstrates backend logic, data modeling, validation, and file processing.
+
+---
+
+## 2.5. Discussion of project scope and feasibility within the timeframe
 
 To ensure feasibility within the project timeframe, the scope is intentionally controlled:
 
