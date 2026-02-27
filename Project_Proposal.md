@@ -20,7 +20,7 @@ This project is worth pursuing because digital learning continues to expand, yet
 
 The primary users are educators and students. Educators need efficient tools to create courses, manage materials, evaluate assignments, and monitor progress. Students require structured learning paths, interactive content, timely feedback, and collaborative spaces for discussion. Educational institutions and training organizations may also benefit from a scalable and centralized learning solution.
 
-## 1.4 EReview of Existing Solutions
+## 1.4 Review of Existing Solutions
 
 Platforms such as Moodle, Canvas, and Google Classroom provide course management capabilities but often emphasize administrative organization over personalized engagement. Interfaces can be complex, customization may be limited, and analytics features are not always deeply integrated.
 
@@ -254,6 +254,118 @@ Each course includes a discussion forum supports live and real-time updates with
 
 ---
 
+### 2.3.7. Assignment Submission and Grading  
+
+- File type validation (PDF, JPG, PNG only).
+- File size limit enforcement (e.g., max 10MB).
+- Prevent duplicate submissions if policy requires.
+- Deadline enforcement (mark as late if submitted after due time).
+- Ensure only enrolled students can submit.
+- Ensure only course teacher can grade.
+- Validate grade range (e.g., 0–100).
+- Prevent unauthorized access to other students’ submissions.
+
+      Student Uploads File
+              │
+              ▼
+      Server Action (Validate Submission)
+              │
+              ├── Validate Enrollment & Deadline
+              ├── Validate File Type & Size
+              ├── Upload File to Cloud Storage
+              ├── Save Metadata in PostgreSQL
+              └── Mark Submission Status
+              │
+              ▼
+      Teacher Reviews Submission
+              │
+              ▼
+      Grade + Feedback Saved
+              │
+              ▼
+      Student Dashboard Updated
+
+This feature demonstrates secure file handling, relational integrity, backend validation logic, and role-based authorization.
+
+**Advanced Feature Category:** File Handling and Processing  
+
+---
+
+### 2.3.8. Calendar Integration for Deadlines  
+
+- Deadline stored in UTC to avoid timezone conflicts.
+- Prevent invalid dates (past deadline during creation).
+- Update dashboard dynamically when deadlines change.
+- Ensure only teacher can modify deadline.
+- Validate `.ics` file format correctness.
+
+      Teacher Sets Deadline
+              │
+              ▼
+      Deadline Stored in PostgreSQL
+              │
+              ▼
+      Aggregation Query (Upcoming Deadlines)
+              │
+              ├── Display Countdown
+              └── Generate .ics File
+              │
+              ▼
+      Student Imports to Calendar
+
+This feature requires structured date queries, dynamic file generation, and secure API handling.
+
+**Advanced Feature Category:** Advanced State Management  
+
+---
+
+### 2.3.9. PostgreSQL for Structured Data  
+
+#### Key Advantages
+
+- Enforces relational integrity via foreign keys.
+- Supports many-to-many enrollment relationships.
+- Enables complex aggregation queries (grade averages, completion %).
+- Ensures transactional consistency for submissions and grading.
+- Prevents orphaned records.
+
+#### Validation Considerations
+
+- Unique constraints (email, enrollment pairs).
+- Foreign key constraints.
+- Cascade rules for deletion (e.g., course deletion).
+- Indexing for performance (assignmentId, courseId).
+- Transaction handling for grading workflow.
+
+---
+
+### 2.3.10. Cloud Storage for Educational Content  
+
+- Secure upload endpoints.
+- MIME type verification.
+- File size restriction.
+- Signed URL or controlled access endpoint.
+- Prevent direct public exposure of private submissions.
+- Handle upload failure rollback.
+
+      File Uploaded
+              │
+              ▼
+      API Route
+              │
+              ├── Validate File
+              ├── Upload to Cloud Storage
+              └── Return File URL
+              │
+              ▼
+      Metadata Saved in PostgreSQL
+
+This approach prevents database bloat and aligns with modern scalable application architecture.
+
+**Advanced Feature Category:** Cloud Integration & File Management  
+
+---
+
 ## 2.3. Alignment with Course Requirements  
 
 This project satisfies all core requirements:
@@ -273,6 +385,33 @@ This project satisfies all core requirements:
 
 ## 2.4. Discussion of project scope and feasibility within the timeframe
 
+To ensure feasibility within the project timeframe, the scope is intentionally controlled:
+
+- Only two user roles (Teacher and Student).
+- Quiz limited to multiple-choice format.
+- Basic discussion forum (no advanced moderation tools).
+- Video upload optional (external link supported initially).
+- Calendar integration via `.ics` export rather than deep external API integration.
+- Certificate design template fixed (no customization builder).
+
+The MVP prioritizes:
+
+- Secure authentication.
+- Course management.
+- Assignment submission and grading.
+- Deadline tracking.
+- Certificate generation.
+
+Advanced features are implemented in controlled complexity to balance ambition and feasibility.
+
+Given a three-member team, responsibilities can be divided across:
+
+- Authentication & User Management.
+- Course & Assignment Workflow.
+- Analytics, Calendar, and Certificate Generation.
+
+This structured approach ensures timely completion while maintaining technical depth and system reliability.
+
 ---
 
 # 3. Tentative Plan
@@ -284,8 +423,3 @@ This project satisfies all core requirements:
 ---
 
 # 5. AI Assistance Disclosure
-
-
-
-
-
