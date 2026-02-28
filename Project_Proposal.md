@@ -663,3 +663,51 @@ We expected these computations to require careful SQL queries and backend valida
 ---
 
 # 5. AI Assistance Disclosure
+
+## 5.1 AI Tool Assistance
+
+---
+
+## 5.2 Sections Developed Without AI Assistance
+
+- The selection of the **Personalized Learning Platform** as our project topic.
+- The initial problem statement and motivation for building a unified learning system.
+- The decision to use **Next.js Full-Stack architecture** instead of separating frontend and backend.
+- The choice of **PostgreSQL** as a relational database due to structured relationships (users, enrollments, submissions, grades).
+- The identification of core features:
+  - Course creation and management
+  - Assignment submission and grading
+  - Role-based authentication (Teacher / Student)
+- Early scope constraints, such as limiting roles to two and restricting quiz types to multiple choice.
+
+These decisions were made through internal team discussion based on prior coursework, technical familiarity, and feasibility within the project timeline.
+
+---
+
+## 5.3 How AI Was Used
+
+AI tools were used primarily for refinement and clarity rather than idea generation. Specifically, AI assisted with:
+
+- Improving the structure and wording of proposal sections.
+- Expanding technical explanations to better align with grading rubrics.
+- Suggesting validation considerations (e.g., file size limits, foreign key constraints).
+- Strengthening the “Alignment with Course Requirements” section.
+- Improving formatting consistency in Markdown.
+
+AI did not determine the core architecture, feature set, or overall direction of the project.
+
+---
+
+## 5.4 Examples of AI Influence and Team Consideration
+
+One idea influenced by AI was the suggestion to explicitly frame certain features (e.g., calendar integration and certificate generation) as “advanced features” tied to backend logic, file processing, and relational validation.
+
+AI suggested emphasizing how these features go beyond basic CRUD operations. After discussing this internally, we considered:
+
+- Whether increasing the technical complexity (e.g., deeper external API integration for calendar sync) would introduce unnecessary risk.
+- Whether expanding certificate customization would exceed the project timeline.
+- Whether adding more advanced features would compromise feasibility.
+
+We ultimately adopted the structural framing (highlighting backend validation and relational queries) but intentionally kept the implementation scope controlled (e.g., `.ics` export instead of full external API integration).
+
+This reflects our approach: AI was used to improve wording and completeness, while final design decisions and scope limitations were determined by the team.
