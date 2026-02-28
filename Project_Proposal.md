@@ -565,6 +565,101 @@ This structured approach ensures timely completion while maintaining technical d
 
 # 4. Initial Independent Reasoning (Before Using AI)
 
+## 4.1 Original Thinking and Plans
+
+---
+
+## 4.2 Application Structure and Architecture
+
+---
+
+## 4.3 Data and State Design
+
+---
+
+## 4.4 Feature Selection and Scope Decisions
+
+Our initial feature discussion focused on defining a realistic MVP before adding advanced features.
+
+We identified the main workflow:
+
+- Teacher creates course.
+- Teacher uploads materials.
+- Student enrolls.
+- Student submits assignment.
+- Teacher grades submission.
+
+We considered adding advanced features such as:
+
+- Real-time collaborative editing
+- Advanced quiz types (drag-and-drop, coding questions)
+- Deep analytics dashboards
+- External API integrations
+
+However, we decided to prioritize:
+
+- Assignment submission and grading
+- Calendar integration for deadlines
+- Certificate generation upon completion
+
+We selected these advanced features because they:
+
+- Extend beyond simple CRUD operations.
+- Require backend logic and validation.
+- Are achievable within the timeframe.
+- Demonstrate relational querying and file handling.
+
+We intentionally limited complexity by:
+
+- Supporting only two roles (Teacher and Student).
+- Restricting quiz types to multiple-choice.
+- Using `.ics` export instead of full external calendar API integration.
+- Using a fixed certificate template rather than a customizable builder.
+
+Our early tradeoff mindset was: depth over breadth.
+
+---
+
+## 4.5 Anticipated Challenges
+
+Before implementation, we identified several potential challenges:
+
+### Authentication and Authorization
+
+Ensuring that:
+
+- Only teachers can grade.
+- Only enrolled students can submit.
+- Students cannot access other students’ submissions.
+
+We anticipated minor authorization bugs if not handled carefully.
+
+### Relational Data Integrity
+
+Managing foreign keys and ensuring that:
+
+- Deleting a course does not orphan records.
+- Submissions are correctly linked to assignments.
+- Aggregation queries are accurate.
+
+### File Handling
+
+Handling:
+
+- File validation (size, type).
+- Secure upload to cloud storage.
+- Preventing unauthorized access to private files.
+
+### Derived State Computation
+
+Calculating:
+
+- Completion percentage.
+- Average grades.
+- Deadline countdowns.
+
+We expected these computations to require careful SQL queries and backend validation.
+
 ---
 
 # 5. AI Assistance Disclosure
