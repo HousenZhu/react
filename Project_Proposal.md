@@ -26,6 +26,8 @@ Platforms such as Moodle, Canvas, and Google Classroom provide course management
 
 This project aims to bridge these gaps by delivering a streamlined, interactive, and data-informed personalized learning environment.
 
+---
+
 # 2. Objective and Key Features  
 
 ## 2.1 Project Objective  
@@ -44,11 +46,7 @@ The platform aims to:
 
 The system will focus on usability, responsiveness, and clear role-based access control, ensuring that different user roles (Teachers and Students) have appropriate permissions and workflows.
 
----
-
 ## 2.2 Technical Implementation  
-
----
 
 ## Technical Implementation Approach — Next.js Full-Stack  
 
@@ -65,8 +63,6 @@ Frontend and backend logic are implemented within a unified TypeScript codebase 
     ├── PostgreSQL (via Prisma)
     ├── Cloud Storage (DigitalOcean Spaces)
     └── Auth (Better Auth)
-
----
 
 ## Database Schema and Relationships  
 
@@ -88,31 +84,7 @@ The **Many-to-Many Relationship** schema is normalized to support course managem
 - **DiscussionPost** (id, courseId, authorId, content)
 - **Certificate** (id, studentId, courseId, generatedAt)
 
-### Entity Relationship Diagram (Textual)
-
-    User (Teacher)
-    │ 1
-    └───────< creates >───────*
-    Course
-    │ 1
-    ├───────< contains >───────*
-    │ Module
-    │ │
-    │ ├── Content
-    │ ├── Quiz ──< Question
-    │ └── Assignment ──< deadline >── Submission
-    │
-    ├───────< has >───────* DiscussionPost
-    │
-    └───────< enrolls via >───────* Enrollment ────* User (Student)
-    
-    Course ────< completion >────── Certificate
-
----
-
 ## 2.3 Key Functional Features  
-
----
 
 ### 2.3.1. User Authentication and Authorization  
 
@@ -126,17 +98,10 @@ The **Many-to-Many Relationship** schema is normalized to support course managem
       Auth Provider (Better Auth)
       │
       ▼
-      Session / Token Issued
-      │
-      ▼
-      Access Protected Route
-      │
       ├── Role Check (Teacher / Student)
       └── Grant / Deny Access
 
 **Advanced Feature Category:** User Authentication and Authorization  
-
----
 
 ### 2.3.2. Course Creation and Management  
 
@@ -163,8 +128,6 @@ Students can:
       ├── Module 2
       │ └── ...
 
----
-
 ### 2.3.3. Interactive Content Builder (Quizzes & Assignments)  
 
 - Multiple-choice quiz builder  
@@ -186,8 +149,6 @@ Students can:
       Feedback & Grade
 
 **Advanced Feature Category:** File Handling and Processing  
-
----
 
 ### 2.3.4. Progress Tracking and Analytics Dashboard  
 
@@ -212,8 +173,6 @@ The system computes:
 
 **Advanced Feature Category:** Advanced State Management  
 
----
-
 ### 2.3.5. Discussion Forums (Real-Time)  
 
 Each course includes a discussion forum supports live and real-time updates without requiring a page refresh.
@@ -230,8 +189,6 @@ Each course includes a discussion forum supports live and real-time updates with
       UI Updates Without Refresh
 
 **Advanced Feature Category:** Real-Time Functionality  
-
----
 
 ### 2.3.6. Certificate Generation  
 
@@ -252,8 +209,6 @@ Each course includes a discussion forum supports live and real-time updates with
       ▼
       Student Downloads Certificate
 
----
-
 ### 2.3.7. Assignment Submission and Grading  
 
 Students can:
@@ -270,27 +225,10 @@ Teachers can:
 - Assign grades and provide feedback.
 - Update grades if necessary.
 
-Validations:
-
-- File type validation (PDF, JPG, PNG only).
-- File size limit enforcement (e.g., max 10MB).
-- Prevent duplicate submissions if policy requires.
-- Deadline enforcement (mark as late if submitted after due time).
-- Ensure only enrolled students can submit.
-- Ensure only course teacher can grade.
-- Validate grade range (e.g., 0–100).
-- Prevent unauthorized access to other students’ submissions.
-
       Student Uploads File
               │
               ▼
       Server Action (Validate Submission)
-              │
-              ├── Validate Enrollment & Deadline
-              ├── Validate File Type & Size
-              ├── Upload File to Cloud Storage
-              ├── Save Metadata in PostgreSQL
-              └── Mark Submission Status
               │
               ▼
       Teacher Reviews Submission
@@ -305,8 +243,6 @@ This feature demonstrates secure file handling, relational integrity, backend va
 
 **Advanced Feature Category:** File Handling and Processing  
 
----
-
 ### 2.3.8. Calendar Integration for Deadlines  
 
 Teachers can:
@@ -319,14 +255,6 @@ Students can:
 - View upcoming deadlines on dashboard.
 - See countdown indicators.
 - Export deadlines via downloadable `.ics` calendar file.
-
-Validations:
-
-- Deadline stored in UTC to avoid timezone conflicts.
-- Prevent invalid dates (past deadline during creation).
-- Update dashboard dynamically when deadlines change.
-- Ensure only teacher can modify deadline.
-- Validate `.ics` file format correctness.
 
       Teacher Sets Deadline
               │
@@ -346,11 +274,7 @@ This feature requires structured date queries, dynamic file generation, and secu
 
 **Advanced Feature Category:** Advanced State Management  
 
----
-
 ### 2.3.9. PostgreSQL for Structured Data  
-
-#### Key Advantages
 
 - Enforces relational integrity via foreign keys.
 - Supports many-to-many enrollment relationships.
@@ -363,10 +287,7 @@ This feature requires structured date queries, dynamic file generation, and secu
 - Unique constraints (email, enrollment pairs).
 - Foreign key constraints.
 - Cascade rules for deletion (e.g., course deletion).
-- Indexing for performance (assignmentId, courseId).
 - Transaction handling for grading workflow.
-
----
 
 ### 2.3.10. Cloud Storage for Educational Content  
 
@@ -392,8 +313,6 @@ This feature requires structured date queries, dynamic file generation, and secu
 This approach prevents database bloat and aligns with modern scalable application architecture.
 
 **Advanced Feature Category:** Cloud Integration & File Management  
-
----
 
 ## 2.4. Alignment with Course Requirements  
 
