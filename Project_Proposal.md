@@ -675,19 +675,33 @@ Keep advanced features controlled in scope
 
 # 4. Initial Independent Reasoning (Before Using AI)
 
-## 4.1 Original Thinking and Plans
+This section documents our team’s original planning discussion before consulting any AI tools. The decisions below reflect our early technical reasoning, assumptions, and collaboration strategy.
 
 ---
 
-## 4.2 Application Structure and Architecture
+## 4.1 Application Structure and Architecture  
+
+### Initial Decision Between Next.js Full-Stack (App Router) and Separate React Frontend + Express Backend  
+
+After comparing both options, we decided to use **Next.js with the App Router**.
+
+Since this is a course project with a limited timeline, we wanted to avoid spending too much time designing and maintaining a separate REST API layer. Managing two separate codebases (frontend and backend) would require additional setup and API handling across services. We felt this could increase complexity and slow down development. Also we do not have strong experience designing backend APIs from scratch using Express. Next.js allows us to write server-side logic using the same language and framework we already know. This felt more efficient for our skill set.
 
 ---
 
-## 4.3 Data and State Design
+## 4.2 Data and State Design  
+
+### Initial Database Design Thinking  
+
+When we first discussed the data design, we agreed that the platform naturally fits a relational model. The system revolves around structured a many-to-many relationships between users, courses, enrollments, assignments, and submissions, so using **PostgreSQL** felt like the most logical choice.
+
+### Client-Side and Server-Side State Design  
+
+we decided to divide application state into long / short term data. Long-term data including users, courses, enrollments, submissions, grades, and discussion posts will be stored in PostgreSQL and accessed through server-side logic. Client-side UI state will include temporary or interaction-based data, such as form inputs and temporary quiz selections. 
 
 ---
 
-## 4.4 Feature Selection and Scope Decisions
+## 4.3 Feature Selection and Scope Decisions
 
 Our initial feature discussion focused on defining a realistic MVP before adding advanced features.
 
@@ -730,7 +744,7 @@ Our early tradeoff mindset was: depth over breadth.
 
 ---
 
-## 4.5 Anticipated Challenges
+## 4.4 Anticipated Challenges
 
 Before implementation, we identified several potential challenges:
 
@@ -769,6 +783,10 @@ Calculating:
 - Deadline countdowns.
 
 We expected these computations to require careful SQL queries and backend validation.
+
+---
+
+## 4.5 Early collaboration plan
 
 ---
 
