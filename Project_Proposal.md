@@ -463,98 +463,22 @@ Our team will adopt an incremental development approach. We will first establish
 Development will proceed in layers to ensure stable integration and reduce conflicts. Version control will be managed using feature branches, with regular internal testing and review before merging.
 
 ## 3.2 Responsibility Breakdown
-Zhiyuan Diao – System Architecture & Security
 
-Next.js full-stack architecture setup
-
-PostgreSQL schema design and Prisma configuration
-
-Authentication and role-based authorization
-
-Middleware protection and secure API validation
-
-Relational integrity enforcement
-
-Integration testing across modules
-
-Zhiyuan ensures secure backend logic and overall system stability.
-
-
-Housen Zhu – Course & Assignment Workflow
-
-Course creation and enrollment logic
-
-Module and content management
-
-Quiz (multiple-choice) implementation
-
-Assignment creation and submission system
-
-File upload validation and cloud storage integration
-
-Teacher grading interface
-
-Housen focuses on the primary teaching and learning workflow.
-
-
-Tianrui Du – Analytics & Advanced Features
-
-Progress tracking computation
-
-Dashboard analytics (completion %, grade averages)
-
-Deadline aggregation and countdown logic
-
-.ics calendar export generation
-
-Certificate PDF generation
-
-Real-time discussion forum implementation
-
-Tianrui develops derived-state computation and advanced backend functionality.
+| Member           | Area                    | Key Responsibilities                                                                                                                                           |
+| ---------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Zhiyuan Diao** | Architecture & Security | - Next.js setup <br> - DB schema & Prisma <br> - Auth & role control <br> - Middleware & API validation <br> - Relational integrity <br> - Integration testing |
+| **Housen Zhu**   | Course & Assignment     | - Course & enrollment logic <br> - Modules & content <br> - MCQ quizzes <br> - Assignment submission <br> - File upload & storage <br> - Grading interface     |
+| **Tianrui Du**   | Analytics & Advanced    | - Progress metrics <br> - Dashboard stats <br> - Deadline & countdown <br> - `.ics` export <br> - Certificate PDF <br> - Real-time forum                       |
 
 ## 3.3 Week-by-Week Plan
-Week 1 – Architecture & Authentication
+| Week       | Focus             | Main Tasks                                                                                            | Outcome                     |
+| ---------- | ----------------- | ----------------------------------------------------------------------------------------------------- | --------------------------- |
+| **Week 1** | Architecture      | - Init Next.js <br> - Design DB <br> - Implement auth <br> - Protect routes                           | Secure system foundation    |
+| **Week 2** | Core Workflow     | - Course & modules <br> - Assignment system <br> - File upload <br> - Grading                         | Working submission workflow |
+| **Week 3** | Advanced Features | - Progress dashboard <br> - Deadline export <br> - Certificates <br> - Real-time forum <br> - Testing | Complete MVP                |
 
-Initialize Next.js App Router project
 
-Design and migrate PostgreSQL schema
-
-Implement authentication and role-based access control
-
-Set up protected routes and core layout
-
-Outcome: Secure login system and foundational architecture.
-
-Week 2 – Core Learning Workflow
-
-Implement course creation and enrollment
-
-Build module organization
-
-Develop assignment creation and submission system
-
-Integrate cloud file upload
-
-Implement grading interface
-
-Outcome: Fully functioning assignment submission and grading workflow.
-
-Week 3 – Analytics & Advanced Features
-
-Implement progress tracking and dashboard metrics
-
-Add deadline management and calendar export
-
-Develop certificate generation
-
-Implement real-time discussion forum
-
-Conduct integration testing and bug fixes
-
-Outcome: Feature-complete MVP with analytics and advanced backend functionality.
-
-3.4 Risk Management
+## 3.4 Risk Management
 
 Potential challenges include authorization errors, relational inconsistencies, file handling issues, and complex aggregation queries.
 
