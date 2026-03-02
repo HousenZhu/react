@@ -1,32 +1,29 @@
 # Personalized Learning Platform
 
 # 1. Motivation
-
 ## 1.1 Problem Statement
 
-As education increasingly shifts toward digital and hybrid formats, learning management systems have become essential tools for course delivery. However, many existing platforms function primarily as content repositories rather than interactive, personalized learning environments. Educators often upload lecture slides, PDFs, and recorded videos, but meaningful engagement tools and integrated feedback mechanisms are limited. Students may struggle to track their progress, stay motivated, or receive timely insights into their performance.
+As education increasingly shifts toward digital and hybrid formats, learning management systems (LMS) have become central to course delivery. However, many existing platforms primarily serve as content repositories rather than interactive, personalized learning environments. Educators typically upload slides, PDFs, and recorded lectures, but tools for meaningful engagement, progress tracking, and integrated feedback are often limited.
 
-In addition, educators frequently rely on multiple disconnected systems for content hosting, assignment submission, grading, communication, and deadline management. This fragmentation increases administrative workload and creates inefficiencies. The lack of integration between content delivery, assessment, analytics, and discussion tools results in a disjointed learning experience for both teachers and students.
+Students may struggle to monitor their performance, stay motivated, or receive timely insights into their learning progress. At the same time, educators frequently rely on multiple disconnected systems for assignments, grading, communication, and deadline management. This fragmentation increases administrative workload and creates an inconsistent user experience. The lack of integration between content delivery, assessment, analytics, and discussion tools results in inefficiencies for both teachers and students.
 
 ## 1.2 Rationale and Significance
 
-The proposed Personalized Learning Platform addresses these challenges by consolidating essential educational features into a unified system. It integrates user authentication with role-based access control, course creation and management, interactive quizzes and assignments, progress tracking, discussion forums, calendar integration, and certificate generation.
+The proposed Personalized Learning Platform addresses these issues by consolidating essential educational functions into a unified system. It integrates role-based authentication, course management, quizzes and assignments, progress tracking, discussion forums, calendar support, and certificate generation within a single platform.
 
-By leveraging PostgreSQL for structured data and cloud storage for scalable content management, the system ensures reliability, organization, and performance. Automated grading and analytics dashboards provide data-driven insights into student performance, helping educators make informed instructional decisions. Students benefit from clear visibility into deadlines, grades, and completion status, which supports accountability and engagement.
+Using PostgreSQL for structured relational data and cloud storage for scalable content management ensures reliability and performance. Automated grading and analytics dashboards provide actionable insights into student performance, enabling data-informed instructional decisions. Students benefit from clear visibility into deadlines, grades, and completion status, supporting accountability and engagement.
 
-This project is worth pursuing because digital learning continues to expand, yet there remains a need for platforms that prioritize usability, personalization, and integration. Developing this system demonstrates practical full-stack engineering skills while solving a real-world problem in modern education.
+As digital learning continues to expand, there is a growing need for platforms that prioritize usability, integration, and personalized feedback. This project addresses that need while demonstrating practical full-stack engineering skills applied to a real-world educational challenge.
 
 ## 1.3 Target User Groups
 
-The primary users are educators and students. Educators need efficient tools to create courses, manage materials, evaluate assignments, and monitor progress. Students require structured learning paths, interactive content, timely feedback, and collaborative spaces for discussion. Educational institutions and training organizations may also benefit from a scalable and centralized learning solution.
+The primary users are educators and students. Educators require tools to create and manage courses, distribute materials, evaluate assignments, and monitor student progress. Students need structured learning paths, interactive assessments, timely feedback, and collaborative discussion spaces. Educational institutions and training organizations may also benefit from a centralized, scalable solution.
 
 ## 1.4 Review of Existing Solutions
 
-Platforms such as Moodle, Canvas, and Google Classroom provide course management capabilities but often emphasize administrative organization over personalized engagement. Interfaces can be complex, customization may be limited, and analytics features are not always deeply integrated.
+Existing platforms such as Moodle, Canvas, and Google Classroom provide course management capabilities but often emphasize administration over personalization. Customization can be limited, and analytics features are not always deeply integrated.
 
-This project aims to bridge these gaps by delivering a streamlined, interactive, and data-informed personalized learning environment.
-
----
+This project aims to deliver a streamlined, interactive, and data-driven learning environment that addresses these limitations.
 
 # 2. Objective and Key Features  
 
@@ -684,13 +681,25 @@ We expected these computations to require careful SQL queries and backend valida
 
 ## 4.5 Early collaboration plan
 
----
+At the start of the project, we divided responsibilities based on technical dependency and individual strengths to reduce integration risks.
+
+Zhiyuan was responsible for system architecture, database schema, authentication, and authorization. Since all features rely on relational integrity and role validation, centralizing these components ensured consistency and minimized schema conflicts.
+
+Housen focused on the core learning workflow, including course creation, assignments, submission, and grading. Grouping these connected features under one owner maintained logical coherence across the teaching process.
+
+Tianrui handled analytics and advanced features such as progress tracking, calendar export, certificate generation, and the discussion forum. These features build on submission and grading data, allowing development after the core workflow was defined.
+
+Coordination emphasized finalizing the schema early, defining clear data contracts, using feature branches, and integrating incrementally. Major architectural changes required team discussion.
+
+This approach prioritized stability, clear ownership, and early integration within the limited timeframe.
 
 # 5. AI Assistance Disclosure
 
 ## 5.1 AI Tool Assistance
 
----
+AI tools were used mainly to improve clarity, organization, and wording of the proposal. After we independently decided on the project topic, architecture, features, and scope, AI helped refine technical explanations and align sections with the grading rubric.
+
+AI also assisted in strengthening justifications for design choices and ensuring consistency across sections. However, all major technical decisions and planning were made by the team. AI served primarily as a writing and refinement tool rather than a source of core ideas.
 
 ## 5.2 Sections Developed Without AI Assistance
 
