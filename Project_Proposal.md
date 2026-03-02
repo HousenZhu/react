@@ -125,52 +125,7 @@ Students can:
       ├── Module 2
       │ └── ...
 
-### 2.3.3. Interactive Content Builder (Quizzes & Assignments)  
-
-- Multiple-choice quiz builder  
-- Automatic grading  
-- File-based assignment submission  
-- Manual grading interface  
-
-      Student Submission
-      │
-      ▼
-      Server Action
-      │
-      ├── Validate Input
-      ├── Store File in Cloud Storage
-      ├── Save Metadata in PostgreSQL
-      └── Trigger Grading Logic
-      │
-      ▼
-      Feedback & Grade
-
-**Advanced Feature Category:** File Handling and Processing  
-
-### 2.3.4. Progress Tracking and Analytics Dashboard  
-
-The system computes:
-
-- Course completion percentage  
-- Average quiz score  
-- Assignment performance  
-- Submission status
-- Calendar and Deadline Management
-
-      Raw Data (Submissions, Grades, Enrollments, Deadlines)
-      │
-      ▼
-      Aggregation Queries (PostgreSQL)
-      │
-      ▼
-      Derived Metrics (Completion %, Average Score, Deadline Countdown)
-      │
-      ▼
-      Dashboard UI (Student / Teacher View)
-
-**Advanced Feature Category:** Advanced State Management  
-
-### 2.3.5. Discussion Forums (Real-Time)  
+### 2.3.3. Discussion Forums (Real-Time)  
 
 Each course includes a discussion forum supports live and real-time updates without requiring a page refresh.
 
@@ -187,7 +142,7 @@ Each course includes a discussion forum supports live and real-time updates with
 
 **Advanced Feature Category:** Real-Time Functionality  
 
-### 2.3.6. Certificate Generation  
+### 2.3.4. Certificate Generation  
 
 - Completion validation  
 - Dynamic PDF generation  
@@ -206,7 +161,7 @@ Each course includes a discussion forum supports live and real-time updates with
       ▼
       Student Downloads Certificate
 
-### 2.3.7. Assignment Submission and Grading  
+### 2.3.5. Assignment Submission and Grading  
 
 Students can:
 
@@ -236,9 +191,7 @@ Teachers can:
               ▼
       Student Dashboard Updated
 
-**Advanced Feature Category:** File Handling and Processing  
-
-### 2.3.8. Calendar Integration for Deadlines  
+### 2.3.6. Calendar Integration for Deadlines  
 
 Teachers can:
 
@@ -251,23 +204,7 @@ Students can:
 - See countdown indicators.
 - Export deadlines via downloadable `.ics` calendar file.
 
-      Teacher Sets Deadline
-              │
-              ▼
-      Deadline Stored in PostgreSQL
-              │
-              ▼
-      Aggregation Query (Upcoming Deadlines)
-              │
-              ├── Display Countdown
-              └── Generate .ics File
-              │
-              ▼
-      Student Imports to Calendar
-
-**Advanced Feature Category:** Advanced State Management  
-
-### 2.3.9. PostgreSQL for Structured Data  
+### 2.3.7. PostgreSQL for Structured Data  
 
 - Enforces relational integrity via foreign keys.
 - Supports many-to-many enrollment relationships.
@@ -275,14 +212,7 @@ Students can:
 - Ensures transactional consistency for submissions and grading.
 - Prevents orphaned records.
 
-#### Validation Considerations
-
-- Unique constraints (email, enrollment pairs).
-- Foreign key constraints.
-- Cascade rules for deletion (e.g., course deletion).
-- Transaction handling for grading workflow.
-
-### 2.3.10. Cloud Storage for Educational Content  
+### 2.3.8. Cloud Storage for Educational Content  
 
 - Secure upload endpoints.
 - MIME type verification.
@@ -303,127 +233,22 @@ Students can:
               ▼
       Metadata Saved in PostgreSQL
 
-**Advanced Feature Category:** Cloud Integration & File Management  
-
 ## 2.4. Alignment with Course Requirements  
 
-This project satisfies all core course technical requirements through a combination of full-stack architecture, structured data modeling, secure file handling, and advanced backend logic.
+This project satisfies all core course technical requirements through a combination of full-stack architecture, structured data modeling, secure file handling, and advanced backend features.
 
-Advanced backend logic includes at least two of the following:
+Core Technical Requirements are satisfied by:
+
+- The project adopts the Next.js Full-Stack App Router model
+- The project is built using TypeScript across both frontend and backend layers.
+- The system uses PostgreSQL with a normalized relational schema
+- Educational materials, assignment submissions, and generated certificates are stored in cloud object storage.
+
+Advanced backend features includes following (detailed explanation are in 2.3):
 
 - Authentication & Authorization
 - Real-Time Functionality
 - File Handling & Processing
-- Advanced State Management
-
-### Full-Stack TypeScript Implementation
-
-The entire application is built using TypeScript across both frontend and backend layers.  
-
-Type safety ensures:
-
-- Strongly typed API contracts between frontend and backend.
-- Reduced runtime errors through compile-time validation.
-- Clear interface definitions for database entities and request/response structures.
-- Maintainable and scalable code architecture.
-
----
-
-### Next.js App Router Architecture
-
-The project adopts the Next.js Full-Stack App Router model, which includes:
-
-- Server Components for secure server-side data fetching.
-- Server Actions for mutations such as assignment submission and grading.
-- Route Handlers (`/api/*`) for file uploads, certificate generation, and calendar exports.
-- Middleware for role-based access control.
-
-This architecture demonstrates:
-
-- Separation of concerns between client and server.
-- Secure server-side logic execution.
-- Efficient rendering and state management.
-
----
-
-### PostgreSQL Relational Database with Normalized Schema
-
-The system uses PostgreSQL with a normalized relational schema to support:
-
-- Many-to-many relationships (students ↔ courses).
-- One-to-many relationships (course → assignments → submissions).
-- Aggregation queries for grade averages and progress tracking.
-- Referential integrity via foreign keys and constraints.
-
-Complex relational queries are required for:
-
-- Computing course completion percentages.
-- Validating assignment eligibility.
-- Aggregating grades for analytics dashboards.
-- Verifying completion criteria before certificate generation.
-
----
-
-### Cloud Storage Integration
-
-Educational materials, assignment submissions, and generated certificates are stored in cloud object storage.
-
-The system includes:
-
-- Secure upload endpoints.
-- File type and size validation.
-- Storage of file metadata in PostgreSQL.
-- Controlled access to private submission files.
-
----
-
-### Role-Based Authentication and Authorization
-
-The application implements secure authentication and authorization logic.
-
-Features include:
-
-- Password hashing and secure session handling.
-- Role-based access control (Teacher vs Student).
-- Protected API routes.
-- Validation to prevent unauthorized grading or submission access.
-
----
-
-### Secure File Upload and Processing
-
-Assignment submission and certificate generation involve:
-
-- Server-side validation of uploaded files.
-- Integration between API routes and cloud storage.
-- Metadata tracking in PostgreSQL.
-- Controlled file retrieval logic.
-
----
-
-### Complex Relational Queries and State Management
-
-The system performs non-trivial database queries and derived state computation, including:
-
-- Deadline aggregation and countdown calculations.
-- Average grade computation.
-- Submission status tracking.
-- Completion validation for certificate eligibility.
-
----
-
-### Advanced Features Beyond CRUD
-
-The platform includes multiple advanced features that extend beyond basic Create-Read-Update-Delete functionality:
-
-- Calendar integration for deadlines (time-based aggregation and file generation).
-- Certificate generation upon completion (PDF generation and conditional validation).
-- Assignment grading workflows with role restrictions and validation.
-- Real-time discussion forum updates via WebSocket integration.
-
-Together, these implementations demonstrate comprehensive understanding of full-stack system design, structured data modeling, secure backend processing, and scalable architecture. Each advanced feature extends beyond basic CRUD operations and demonstrates backend logic, data modeling, validation, and file processing.
-
----
 
 ## 2.5. Discussion of project scope and feasibility within the timeframe
 
@@ -436,7 +261,7 @@ To ensure feasibility within the project timeframe, the scope is intentionally c
 - Calendar integration via `.ics` export rather than deep external API integration.
 - Certificate design template fixed (no customization builder).
 
-The MVP prioritizes:
+Our system prioritizes:
 
 - Secure authentication.
 - Course management.
@@ -445,12 +270,6 @@ The MVP prioritizes:
 - Certificate generation.
 
 Advanced features are implemented in controlled complexity to balance ambition and feasibility.
-
-Given a three-member team, responsibilities can be divided across:
-
-- Authentication & User Management.
-- Course & Assignment Workflow.
-- Analytics, Calendar, and Certificate Generation.
 
 ---
 
@@ -496,33 +315,21 @@ Keep advanced features controlled in scope
 
 This section documents our team’s original planning discussion before consulting any AI tools. The decisions below reflect our early technical reasoning, assumptions, and collaboration strategy.
 
----
-
 ## 4.1 Application Structure and Architecture  
-
-### Initial Decision Between Next.js Full-Stack (App Router) and Separate React Frontend + Express Backend  
 
 After comparing both options, we decided to use **Next.js with the App Router**.
 
 Since this is a course project with a limited timeline, we wanted to avoid spending too much time designing and maintaining a separate REST API layer. Managing two separate codebases (frontend and backend) would require additional setup and API handling across services. We felt this could increase complexity and slow down development. Also we do not have strong experience designing backend APIs from scratch using Express. Next.js allows us to write server-side logic using the same language and framework we already know. This felt more efficient for our skill set.
 
----
-
 ## 4.2 Data and State Design  
-
-### Initial Database Design Thinking  
 
 When we first discussed the data design, we agreed that the platform naturally fits a relational model. The system revolves around structured a many-to-many relationships between users, courses, enrollments, assignments, and submissions, so using **PostgreSQL** felt like the most logical choice.
 
-### Client-Side and Server-Side State Design  
-
 we decided to divide application state into long / short term data. Long-term data including users, courses, enrollments, submissions, grades, and discussion posts will be stored in PostgreSQL and accessed through server-side logic. Client-side UI state will include temporary or interaction-based data, such as form inputs and temporary quiz selections. 
-
----
 
 ## 4.3 Feature Selection and Scope Decisions
 
-Our initial feature discussion focused on defining a realistic MVP before adding advanced features.
+Our initial feature discussion focused on defining a realistic baseline before adding advanced features.
 
 We identified the main workflow:
 
@@ -534,54 +341,24 @@ We identified the main workflow:
 
 We considered adding advanced features such as:
 
-- Real-time collaborative editing
+- Real-time discussion platform
 - Advanced quiz types (drag-and-drop, coding questions)
-- Deep analytics dashboards
 - External API integrations
-
-However, we decided to prioritize:
-
-- Assignment submission and grading
-- Calendar integration for deadlines
-- Certificate generation upon completion
 
 We selected these advanced features because they:
 
 - Extend beyond simple CRUD operations.
-- Require backend logic and validation.
 - Are achievable within the timeframe.
-- Demonstrate relational querying and file handling.
 
 We intentionally limited complexity by:
 
 - Supporting only two roles (Teacher and Student).
 - Restricting quiz types to multiple-choice.
 - Using `.ics` export instead of full external calendar API integration.
-- Using a fixed certificate template rather than a customizable builder.
-
----
 
 ## 4.4 Anticipated Challenges
 
-Before implementation, we identified several potential challenges:
-
-### Authentication and Authorization
-
-Ensuring that:
-
-- Only teachers can grade.
-- Only enrolled students can submit.
-- Students cannot access other students’ submissions.
-
-We anticipated minor authorization bugs if not handled carefully.
-
-### Relational Data Integrity
-
-Managing foreign keys and ensuring that:
-
-- Deleting a course does not orphan records.
-- Submissions are correctly linked to assignments.
-- Aggregation queries are accurate.
+Before implementation, we identified two potential challenges:
 
 ### File Handling
 
@@ -601,8 +378,6 @@ Calculating:
 
 We expected these computations to require careful SQL queries and backend validation.
 
----
-
 ## 4.5 Early collaboration plan
 
 At the start of the project, we divided responsibilities based on technical dependency and individual strengths to reduce integration risks.
@@ -612,10 +387,6 @@ Zhiyuan was responsible for system architecture, database schema, authentication
 Housen focused on the core learning workflow, including course creation, assignments, submission, and grading. Grouping these connected features under one owner maintained logical coherence across the teaching process.
 
 Tianrui handled analytics and advanced features such as progress tracking, calendar export, certificate generation, and the discussion forum. These features build on submission and grading data, allowing development after the core workflow was defined.
-
-Coordination emphasized finalizing the schema early, defining clear data contracts, using feature branches, and integrating incrementally. Major architectural changes required team discussion.
-
-This approach prioritized stability, clear ownership, and early integration within the limited timeframe.
 
 # 5. AI Assistance Disclosure
 
