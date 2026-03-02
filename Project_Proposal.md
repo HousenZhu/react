@@ -239,8 +239,6 @@ Teachers can:
               ▼
       Student Dashboard Updated
 
-This feature demonstrates secure file handling, relational integrity, backend validation logic, and role-based authorization.
-
 **Advanced Feature Category:** File Handling and Processing  
 
 ### 2.3.8. Calendar Integration for Deadlines  
@@ -269,8 +267,6 @@ Students can:
               │
               ▼
       Student Imports to Calendar
-
-This feature requires structured date queries, dynamic file generation, and secure API handling.
 
 **Advanced Feature Category:** Advanced State Management  
 
@@ -310,8 +306,6 @@ This feature requires structured date queries, dynamic file generation, and secu
               ▼
       Metadata Saved in PostgreSQL
 
-This approach prevents database bloat and aligns with modern scalable application architecture.
-
 **Advanced Feature Category:** Cloud Integration & File Management  
 
 ## 2.4. Alignment with Course Requirements  
@@ -328,14 +322,13 @@ Advanced backend logic includes at least two of the following:
 ### Full-Stack TypeScript Implementation
 
 The entire application is built using TypeScript across both frontend and backend layers.  
+
 Type safety ensures:
 
 - Strongly typed API contracts between frontend and backend.
 - Reduced runtime errors through compile-time validation.
 - Clear interface definitions for database entities and request/response structures.
 - Maintainable and scalable code architecture.
-
-This demonstrates mastery of modern strongly-typed full-stack development practices.
 
 ---
 
@@ -372,8 +365,6 @@ Complex relational queries are required for:
 - Aggregating grades for analytics dashboards.
 - Verifying completion criteria before certificate generation.
 
-This demonstrates competency in structured data modeling and relational database design beyond simple CRUD storage.
-
 ---
 
 ### Cloud Storage Integration
@@ -386,8 +377,6 @@ The system includes:
 - File type and size validation.
 - Storage of file metadata in PostgreSQL.
 - Controlled access to private submission files.
-
-This separation of file storage from structured relational data reflects industry best practices and demonstrates understanding and usage of scalable architecture design.
 
 ---
 
@@ -402,8 +391,6 @@ Features include:
 - Protected API routes.
 - Validation to prevent unauthorized grading or submission access.
 
-This demonstrates secure system design and backend enforcement of business logic constraints.
-
 ---
 
 ### Secure File Upload and Processing
@@ -414,8 +401,6 @@ Assignment submission and certificate generation involve:
 - Integration between API routes and cloud storage.
 - Metadata tracking in PostgreSQL.
 - Controlled file retrieval logic.
-
-These features extend beyond simple form submission and require backend orchestration across multiple services.
 
 ---
 
@@ -428,8 +413,6 @@ The system performs non-trivial database queries and derived state computation, 
 - Submission status tracking.
 - Completion validation for certificate eligibility.
 
-This demonstrates advanced backend data processing and state management rather than simple record retrieval.
-
 ---
 
 ### Advanced Features Beyond CRUD
@@ -441,9 +424,7 @@ The platform includes multiple advanced features that extend beyond basic Create
 - Assignment grading workflows with role restrictions and validation.
 - Real-time discussion forum updates via WebSocket integration.
 
-Each of these features requires backend validation, relational modeling, and cross-layer coordination between database, server logic, and UI components.
-
-Together, these implementations demonstrate comprehensive understanding of full-stack system design, structured data modeling, secure backend processing, and scalable architecture — fully satisfying the technical requirements. Each advanced feature extends beyond basic CRUD operations and demonstrates backend logic, data modeling, validation, and file processing.
+Together, these implementations demonstrate comprehensive understanding of full-stack system design, structured data modeling, secure backend processing, and scalable architecture. Each advanced feature extends beyond basic CRUD operations and demonstrates backend logic, data modeling, validation, and file processing.
 
 ---
 
@@ -473,8 +454,6 @@ Given a three-member team, responsibilities can be divided across:
 - Authentication & User Management.
 - Course & Assignment Workflow.
 - Analytics, Calendar, and Certificate Generation.
-
-This structured approach ensures timely completion while maintaining technical depth and system reliability.
 
 ---
 
@@ -659,8 +638,6 @@ We intentionally limited complexity by:
 - Using `.ics` export instead of full external calendar API integration.
 - Using a fixed certificate template rather than a customizable builder.
 
-Our early tradeoff mindset was: depth over breadth.
-
 ---
 
 ## 4.4 Anticipated Challenges
@@ -741,8 +718,6 @@ AI tools were used primarily for refinement and clarity rather than idea generat
 - Strengthening the “Alignment with Course Requirements” section.
 - Improving formatting consistency in Markdown.
 
-AI did not determine the core architecture, feature set, or overall direction of the project.
-
 ---
 
 ## 5.4 Examples of AI Influence and Team Consideration
@@ -757,4 +732,4 @@ AI suggested emphasizing how these features go beyond basic CRUD operations. Aft
 
 We ultimately adopted the structural framing (highlighting backend validation and relational queries) but intentionally kept the implementation scope controlled (e.g., `.ics` export instead of full external API integration).
 
-This reflects our approach: AI was used to improve wording and completeness, while final design decisions and scope limitations were determined by the team.
+AI was used to improve wording and completeness, while final design decisions and scope limitations were determined by the team.
