@@ -221,18 +221,6 @@ Students can:
 - Prevent direct public exposure of private submissions.
 - Handle upload failure rollback.
 
-      File Uploaded
-              │
-              ▼
-      API Route
-              │
-              ├── Validate File
-              ├── Upload to Cloud Storage
-              └── Return File URL
-              │
-              ▼
-      Metadata Saved in PostgreSQL
-
 ## 2.4. Alignment with Course Requirements  
 
 This project satisfies all core course technical requirements through a combination of full-stack architecture, structured data modeling, secure file handling, and advanced backend features.
@@ -313,8 +301,6 @@ Keep advanced features controlled in scope
 
 # 4. Initial Independent Reasoning (Before Using AI)
 
-This section documents our team’s original planning discussion before consulting any AI tools. The decisions below reflect our early technical reasoning, assumptions, and collaboration strategy.
-
 ## 4.1 Application Structure and Architecture  
 
 After comparing both options, we decided to use **Next.js with the App Router**.
@@ -362,21 +348,17 @@ Before implementation, we identified two potential challenges:
 
 ### File Handling
 
-Handling:
-
 - File validation (size, type).
 - Secure upload to cloud storage.
 - Preventing unauthorized access to private files.
 
 ### Derived State Computation
 
-Calculating:
-
 - Completion percentage.
 - Average grades.
 - Deadline countdowns.
 
-We expected these computations to require careful SQL queries and backend validation.
+We expected these computations to require careful backend validation and SQL queries.
 
 ## 4.5 Early collaboration plan
 
@@ -390,50 +372,31 @@ Tianrui handled analytics and advanced features such as progress tracking, calen
 
 # 5. AI Assistance Disclosure
 
-## 5.1 AI Tool Assistance
+AI tools were used mainly to improve clarity, organization, and wording of the proposal. However, all major technical decisions and planning were made by the team. After we independently decided on the project topic, architecture, features, and scope, AI helped refine technical explanations and align sections with the grading rubric.
 
-AI tools were used mainly to improve clarity, organization, and wording of the proposal. After we independently decided on the project topic, architecture, features, and scope, AI helped refine technical explanations and align sections with the grading rubric.
-
-AI also assisted in strengthening justifications for design choices and ensuring consistency across sections. However, all major technical decisions and planning were made by the team. AI served primarily as a writing and refinement tool rather than a source of core ideas.
-
-## 5.2 Sections Developed Without AI Assistance
+## 5.1 Sections Developed Without AI Assistance
 
 - The selection of the **Personalized Learning Platform** as our project topic.
-- The initial problem statement and motivation for building a unified learning system.
 - The decision to use **Next.js Full-Stack architecture** instead of separating frontend and backend.
-- The choice of **PostgreSQL** as a relational database due to structured relationships (users, enrollments, submissions, grades).
-- The identification of core features:
-  - Course creation and management
-  - Assignment submission and grading
-  - Role-based authentication (Teacher / Student)
-- Early scope constraints, such as limiting roles to two and restricting quiz types to multiple choice.
-
-These decisions were made through internal team discussion based on prior coursework, technical familiarity, and feasibility within the project timeline.
-
----
+- The choice of **PostgreSQL** as a relational database.
+- The identification of core features.
 
 ## 5.3 How AI Was Used
 
-AI tools were used primarily for refinement and clarity rather than idea generation. Specifically, AI assisted with:
+AI tools were used primarily for refinement and clarity rather than idea generation.
 
-- Improving the structure and wording of proposal sections.
 - Expanding technical explanations to better align with grading rubrics.
 - Suggesting validation considerations (e.g., file size limits, foreign key constraints).
-- Strengthening the “Alignment with Course Requirements” section.
 - Improving formatting consistency in Markdown.
-
----
 
 ## 5.4 Examples of AI Influence and Team Consideration
 
-One idea influenced by AI was the suggestion to explicitly frame certain features (e.g., calendar integration and certificate generation) as “advanced features” tied to backend logic, file processing, and relational validation.
+One idea influenced by AI was the suggestion to explicitly frame certain features (e.g., calendar integration and certificate generation) as “advanced features”.
 
-AI suggested emphasizing how these features go beyond basic CRUD operations. After discussing this internally, we considered:
+After discussing this internally, we considered:
 
 - Whether increasing the technical complexity (e.g., deeper external API integration for calendar sync) would introduce unnecessary risk.
 - Whether expanding certificate customization would exceed the project timeline.
-- Whether adding more advanced features would compromise feasibility.
 
-We ultimately adopted the structural framing (highlighting backend validation and relational queries) but intentionally kept the implementation scope controlled (e.g., `.ics` export instead of full external API integration).
+We ultimately adopted the structural framing, but intentionally kept the implementation scope controlled (e.g., `.ics` export instead of full external API integration).
 
-AI was used to improve wording and completeness, while final design decisions and scope limitations were determined by the team.
