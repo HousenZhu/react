@@ -332,7 +332,7 @@ Tianrui handled analytics and advanced features such as progress tracking, calen
 
 # 5. AI Assistance Disclosure
 
-AI tools were used mainly to improve clarity, organization, and wording of the proposal. However, all major technical decisions and planning were made by the team. After we independently decided on the project topic, architecture, features, and scope, AI helped refine technical explanations and align sections with the grading rubric.
+AI tools were used mainly to improve clarity, organization, and wording of the proposal. We also took suggestions about features workload and validation constraints. After we independently decided on the project topic, architecture, features, and scope, AI helped refine technical explanations and align sections with the grading rubric.
 
 ## 5.1 Sections Developed Without AI Assistance
 
@@ -341,7 +341,7 @@ AI tools were used mainly to improve clarity, organization, and wording of the p
 - The choice of **PostgreSQL** as a relational database.
 - The identification of core features.
 
-## 5.3 How AI Was Used
+## 5.2 How AI Was Used
 
 AI tools were used primarily for refinement and clarity rather than idea generation.
 
@@ -349,7 +349,7 @@ AI tools were used primarily for refinement and clarity rather than idea generat
 - Suggesting validation considerations (e.g., file size limits, foreign key constraints).
 - Improving formatting consistency in Markdown.
 
-## 5.4 Examples of AI Influence and Team Consideration
+## 5.3 Examples of AI Influence and Team Consideration
 
 One idea influenced by AI was the suggestion to explicitly frame certain features (e.g., calendar integration and certificate generation) as “advanced features”.
 
