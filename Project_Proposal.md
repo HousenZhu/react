@@ -3,7 +3,7 @@
 # 1. Motivation
 ## 1.1 Problem Statement
 
-As education increasingly shifts toward digital and hybrid formats, learning management systems (LMS) have become central to course delivery. However, many existing platforms primarily serve as content repositories rather than interactive, personalized learning environments. Educators typically upload slides, PDFs, and recorded lectures, but tools for meaningful engagement, progress tracking, and integrated feedback are often limited.
+As education increasingly shifts toward digital and hybrid formats, learning management systems have become central to course delivery. However, many existing platforms primarily serve as content repositories rather than interactive, personalized learning environments. Educators typically upload slides, PDFs, and recorded lectures, but tools for meaningful engagement, progress tracking, and integrated feedback are often limited.
 
 Students may struggle to monitor their performance, stay motivated, or receive timely insights into their learning progress. At the same time, educators frequently rely on multiple disconnected systems for assignments, grading, communication, and deadline management. This fragmentation increases administrative workload and creates an inconsistent user experience. The lack of integration between content delivery, assessment, analytics, and discussion tools results in inefficiencies for both teachers and students.
 
@@ -11,19 +11,13 @@ Students may struggle to monitor their performance, stay motivated, or receive t
 
 The proposed Personalized Learning Platform addresses these issues by consolidating essential educational functions into a unified system. It integrates role-based authentication, course management, quizzes and assignments, progress tracking, discussion forums, calendar support, and certificate generation within a single platform.
 
-Using PostgreSQL for structured relational data and cloud storage for scalable content management ensures reliability and performance. Automated grading and analytics dashboards provide actionable insights into student performance, enabling data-informed instructional decisions. Students benefit from clear visibility into deadlines, grades, and completion status, supporting accountability and engagement.
+Using PostgreSQL for structured relational data and cloud storage for scalable content management ensures reliability and performance. Students benefit from clear visibility into deadlines, grades, and completion status, supporting accountability and engagement.
 
 As digital learning continues to expand, there is a growing need for platforms that prioritize usability, integration, and personalized feedback. This project addresses that need while demonstrating practical full-stack engineering skills applied to a real-world educational challenge.
 
 ## 1.3 Target User Groups
 
 The primary users are educators and students. Educators require tools to create and manage courses, distribute materials, evaluate assignments, and monitor student progress. Students need structured learning paths, interactive assessments, timely feedback, and collaborative discussion spaces. Educational institutions and training organizations may also benefit from a centralized, scalable solution.
-
-## 1.4 Review of Existing Solutions
-
-Existing platforms such as Moodle, Canvas, and Google Classroom provide course management capabilities but often emphasize administration over personalization. Customization can be limited, and analytics features are not always deeply integrated.
-
-This project aims to deliver a streamlined, interactive, and data-driven learning environment that addresses these limitations.
 
 # 2. Objective and Key Features  
 
@@ -177,20 +171,6 @@ Teachers can:
 - Assign grades and provide feedback.
 - Update grades if necessary.
 
-      Student Uploads File
-              │
-              ▼
-      Server Action (Validate Submission)
-              │
-              ▼
-      Teacher Reviews Submission
-              │
-              ▼
-      Grade + Feedback Saved
-              │
-              ▼
-      Student Dashboard Updated
-
 ### 2.3.6. Calendar Integration for Deadlines  
 
 Teachers can:
@@ -262,14 +242,11 @@ Advanced features are implemented in controlled complexity to balance ambition a
 ---
 
 # 3. Tentative Plan
+ 
+We will first establish the system architecture and database schema, then implement core functionality (authentication and course workflow), followed by advanced features (analytics, calendar integration, certificate generation, and real-time discussion).
 
-## 3.1 Development Strategy
 
-Our team will adopt an incremental development approach. We will first establish the system architecture and database schema, then implement core functionality (authentication and course workflow), followed by advanced features (analytics, calendar integration, certificate generation, and real-time discussion).
-
-Development will proceed in layers to ensure stable integration and reduce conflicts. Version control will be managed using feature branches, with regular internal testing and review before merging.
-
-## 3.2 Responsibility Breakdown
+## 3.1 Responsibility Breakdown
 
 | Member           | Area                    | Key Responsibilities                                                                                                                                           |
 | ---------------- | ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -277,27 +254,14 @@ Development will proceed in layers to ensure stable integration and reduce confl
 | **Housen Zhu**   | Course & Assignment     | - Course & enrollment logic <br> - Modules & content <br> - MCQ quizzes <br> - Assignment submission <br> - File upload & storage <br> - Grading interface     |
 | **Tianrui Du**   | Analytics & Advanced    | - Progress metrics <br> - Dashboard stats <br> - Deadline & countdown <br> - `.ics` export <br> - Certificate PDF <br> - Real-time forum                       |
 
-## 3.3 Week-by-Week Plan
+## 3.2 Week-by-Week Plan
 | Week       | Focus             | Main Tasks                                                                                            | Outcome                     |
 | ---------- | ----------------- | ----------------------------------------------------------------------------------------------------- | --------------------------- |
 | **Week 1** | Architecture      | - Init Next.js <br> - Design DB <br> - Implement auth <br> - Protect routes                           | Secure system foundation    |
 | **Week 2** | Core Workflow     | - Course & modules <br> - Assignment system <br> - File upload <br> - Grading                         | Working submission workflow |
-| **Week 3** | Advanced Features | - Progress dashboard <br> - Deadline export <br> - Certificates <br> - Real-time forum <br> - Testing | Complete MVP                |
+| **Week 3** | Advanced Features | - Progress dashboard <br> - Deadline export <br> - Certificates <br> - Real-time forum <br> - Testing | Complete system                |
 
-
-## 3.4 Risk Management
-
-Potential challenges include authorization errors, relational inconsistencies, file handling issues, and complex aggregation queries.
-
-To mitigate risk, we will:
-
-Finalize the database schema early
-
-Integrate features incrementally
-
-Perform continuous internal testing
-
-Keep advanced features controlled in scope
+---
 
 # 4. Initial Independent Reasoning (Before Using AI)
 
@@ -314,8 +278,6 @@ When we first discussed the data design, we agreed that the platform naturally f
 we decided to divide application state into long / short term data. Long-term data including users, courses, enrollments, submissions, grades, and discussion posts will be stored in PostgreSQL and accessed through server-side logic. Client-side UI state will include temporary or interaction-based data, such as form inputs and temporary quiz selections. 
 
 ## 4.3 Feature Selection and Scope Decisions
-
-Our initial feature discussion focused on defining a realistic baseline before adding advanced features.
 
 We identified the main workflow:
 
@@ -361,8 +323,6 @@ Before implementation, we identified two potential challenges:
 We expected these computations to require careful backend validation and SQL queries.
 
 ## 4.5 Early collaboration plan
-
-At the start of the project, we divided responsibilities based on technical dependency and individual strengths to reduce integration risks.
 
 Zhiyuan was responsible for system architecture, database schema, authentication, and authorization. Since all features rely on relational integrity and role validation, centralizing these components ensured consistency and minimized schema conflicts.
 
