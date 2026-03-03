@@ -332,7 +332,7 @@ Tianrui handled analytics and advanced features such as progress tracking, calen
 
 # 5. AI Assistance Disclosure
 
-AI tools were used mainly to improve clarity, organization, and wording of the proposal. We also took suggestions about features workload and validation constraints. After we independently decided on the project topic, architecture, features, and scope, AI helped refine technical explanations and align sections with the grading rubric.
+AI tools were used mainly to improve clarity, organization, and wording of the proposal. We also took suggestions about features workload and validation constraints. After we decided on the project topic, architecture, features, and scope, AI helped refine technical explanations and align sections with the grading rubric.
 
 ## 5.1 Sections Developed Without AI Assistance
 
