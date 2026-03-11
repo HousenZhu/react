@@ -137,6 +137,7 @@ export async function getCourse(courseId: string) {
 
   return {
     ...course,
+    isPublished: course.published,
     isTeacher,
     isEnrolled: !!isEnrolled,
     enrollment: isEnrolled,
@@ -286,7 +287,7 @@ export async function toggleCoursePublish(courseId: string) {
   revalidatePath("/dashboard/courses");
   revalidatePath("/courses");
 
-  return updated;
+  return { ...updated, isPublished: updated.published };
 }
 
 /**
@@ -330,19 +331,19 @@ export async function getCourseAnalytics(courseId: string) {
   const totalStudents = course.enrollments.length;
   const averageProgress =
     totalStudents > 0
-      ? course.enrollments.reduce((sum, e) => sum + e.progress, 0) / totalStudents
+      ? course.enrollments.reduce((sum: number, e: { progress: number }) => sum + e.progress, 0) / totalStudents
       : 0;
 
-  const completedStudents = course.enrollments.filter((e) => e.completed).length;
+  const completedStudents = course.enrollments.filter((e: { completed: boolean }) => e.completed).length;
 
   // Calculate submission stats
-  const allSubmissions = course.modules.flatMap((m) =>
+  const allSubmissions = course.modules.flatMap((m: { assignments: Array<{ submissions: Array<{ grade: number | null }> }> }) =>
     m.assignments.flatMap((a) => a.submissions)
   );
-  const gradedSubmissions = allSubmissions.filter((s) => s.grade !== null);
+  const gradedSubmissions = allSubmissions.filter((s: { grade: number | null }) => s.grade !== null);
   const averageGrade =
     gradedSubmissions.length > 0
-      ? gradedSubmissions.reduce((sum, s) => sum + (s.grade || 0), 0) /
+      ? gradedSubmissions.reduce((sum: number, s: { grade: number | null }) => sum + (s.grade || 0), 0) /
         gradedSubmissions.length
       : 0;
 

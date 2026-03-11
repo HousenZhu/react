@@ -80,7 +80,8 @@ export function broadcastToCourseTopic(courseId: string, message: unknown) {
   if (!courseConnections) return;
 
   const data = JSON.stringify(message);
-  for (const controller of courseConnections) {
+  const controllersArray = Array.from(courseConnections);
+  for (const controller of controllersArray) {
     try {
       controller.enqueue(`data: ${data}\n\n`);
     } catch {

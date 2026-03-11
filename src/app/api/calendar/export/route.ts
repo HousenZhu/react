@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
       select: { courseId: true },
     });
 
-    const courseIds = enrollments.map((e) => e.courseId);
+    const courseIds = enrollments.map((e: { courseId: string }) => e.courseId);
 
     if (courseIds.length === 0) {
       return new NextResponse("No enrolled courses found", { status: 404 });
@@ -50,7 +50,12 @@ export async function GET(request: NextRequest) {
     });
 
     // Convert to calendar events
-    const deadlines = assignments.map((a) => ({
+    const deadlines = assignments.map((a: {
+      title: string;
+      description: string | null;
+      deadline: Date | null;
+      module: { course: { title: string } };
+    }) => ({
       title: a.title,
       description: a.description || undefined,
       deadline: a.deadline,
