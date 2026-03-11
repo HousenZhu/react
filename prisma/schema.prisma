@@ -1,0 +1,345 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== ENUMS ====================
+
+enum Role {
+  TEACHER
+  STUDENT
+}
+
+enum ContentType {
+  PDF
+  VIDEO
+  LINK
+  IMAGE
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+}
+
+enum SubmissionStatus {
+  SUBMITTED
+  LATE
+  GRADED
+}
+
+// ==================== AUTH MODELS ====================
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  emailVerified Boolean   @default(false)
+  image         String?
+  role          Role      @default(STUDENT)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Auth Relations
+  sessions Session[]
+  accounts Account[]
+
+  // App Relations
+  taughtCourses   Course[]         @relation("TeacherCourses")
+  enrollments     Enrollment[]
+  submissions     Submission[]
+  quizAttempts    QuizAttempt[]
+  discussionPosts DiscussionPost[]
+  certificates    Certificate[]
+
+  @@map("users")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Account {
+  id                String    @id @default(cuid())
+  userId            String
+  accountId         String
+  providerId        String
+  accessToken       String?
+  refreshToken      String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope             String?
+  idToken           String?
+  password          String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("accounts")
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("verifications")
+}
+
+// ==================== COURSE MODELS ====================
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  imageUrl    String?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  teacherId String
+  teacher   User   @relation("TeacherCourses", fields: [teacherId], references: [id], onDelete: Cascade)
+
+  modules      Module[]
+  enrollments  Enrollment[]
+  discussions  DiscussionPost[]
+  certificates Certificate[]
+
+  @@index([teacherId])
+  @@map("courses")
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  enrolledAt DateTime @default(now())
+  progress   Float    @default(0) // 0-100 percentage
+  completed  Boolean  @default(false)
+
+  // Relations
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+  @@index([courseId])
+  @@map("enrollments")
+}
+
+// ==================== MODULE & CONTENT MODELS ====================
+
+model Module {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  order       Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  contents    Content[]
+  quizzes     Quiz[]
+  assignments Assignment[]
+
+  @@index([courseId])
+  @@map("modules")
+}
+
+model Content {
+  id        String      @id @default(cuid())
+  title     String
+  type      ContentType
+  fileUrl   String?
+  linkUrl   String?
+  duration  Int?        // Duration in minutes for videos
+  order     Int
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  // Relations
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  @@index([moduleId])
+  @@map("contents")
+}
+
+// ==================== QUIZ MODELS ====================
+
+model Quiz {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  timeLimit   Int?     // Time limit in minutes
+  passingScore Float   @default(60) // Percentage required to pass
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  questions Question[]
+  attempts  QuizAttempt[]
+
+  @@index([moduleId])
+  @@map("quizzes")
+}
+
+model Question {
+  id      String       @id @default(cuid())
+  text    String
+  type    QuestionType @default(MULTIPLE_CHOICE)
+  options Json         // Array of {id: string, text: string, isCorrect: boolean}
+  points  Int          @default(1)
+  order   Int
+
+  // Relations
+  quizId String
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+  @@map("questions")
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  answers     Json     // {questionId: selectedOptionId}
+  score       Float?   // Calculated score as percentage
+  passed      Boolean  @default(false)
+  startedAt   DateTime @default(now())
+  submittedAt DateTime?
+
+  // Relations
+  quizId    String
+  quiz      Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([quizId])
+  @@index([studentId])
+  @@map("quiz_attempts")
+}
+
+// ==================== ASSIGNMENT MODELS ====================
+
+model Assignment {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  instructions String?
+  deadline    DateTime
+  maxScore    Int      @default(100)
+  allowLate   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  submissions Submission[]
+
+  @@index([moduleId])
+  @@index([deadline])
+  @@map("assignments")
+}
+
+model Submission {
+  id          String           @id @default(cuid())
+  content     String?          // Text response
+  fileUrl     String?          // Uploaded file URL
+  fileName    String?          // Original file name
+  status      SubmissionStatus @default(SUBMITTED)
+  grade       Float?           // Grade out of maxScore
+  feedback    String?          // Teacher feedback
+  submittedAt DateTime         @default(now())
+  gradedAt    DateTime?
+
+  // Relations
+  assignmentId String
+  assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  studentId    String
+  student      User       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([assignmentId, studentId])
+  @@index([assignmentId])
+  @@index([studentId])
+  @@index([status])
+  @@map("submissions")
+}
+
+// ==================== DISCUSSION MODELS ====================
+
+model DiscussionPost {
+  id        String   @id @default(cuid())
+  title     String?  // Only for root posts
+  content   String
+  isPinned  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  // Self-referential for replies
+  parentId String?
+  parent   DiscussionPost?  @relation("Replies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies  DiscussionPost[] @relation("Replies")
+
+  @@index([courseId])
+  @@index([authorId])
+  @@index([parentId])
+  @@map("discussion_posts")
+}
+
+// ==================== CERTIFICATE MODEL ====================
+
+model Certificate {
+  id           String   @id @default(cuid())
+  certificateNumber String @unique @default(cuid())
+  fileUrl      String
+  courseName   String   // Snapshot of course name at generation time
+  studentName  String   // Snapshot of student name at generation time
+  completedAt  DateTime
+  generatedAt  DateTime @default(now())
+
+  // Relations
+  studentId String
+  student   User   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  courseId  String
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+  @@index([studentId])
+  @@index([courseId])
+  @@map("certificates")
+}
