@@ -22,9 +22,13 @@ export default async function QuizPage({ params }: QuizPageProps) {
   const quiz = await db.quiz.findUnique({
     where: { id: params.quizId },
     include: {
-      course: {
+      module: {
         include: {
-          teacher: { select: { id: true, name: true } },
+          course: {
+            include: {
+              teacher: { select: { id: true, name: true } },
+            },
+          },
         },
       },
       questions: {
@@ -32,7 +36,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
       },
       attempts: {
         where: { studentId: user.id },
-        orderBy: { completedAt: "desc" },
+        orderBy: { submittedAt: "desc" },
       },
     },
   });
@@ -41,7 +45,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
     notFound();
   }
 
-  const isTeacher = quiz.course.teacher.id === user.id;
+  const isTeacher = quiz.module.course.teacher.id === user.id;
   const hasAttempts = quiz.attempts.length > 0;
   const bestAttempt = quiz.attempts.reduce((best: { score: number } | null, attempt: { score: number }) => 
     !best || attempt.score > best.score ? attempt : best, null);
@@ -61,7 +65,7 @@ export default async function QuizPage({ params }: QuizPageProps) {
         <CardHeader>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm text-gray-500 mb-1">{quiz.course.title}</p>
+              <p className="text-sm text-gray-500 mb-1">{quiz.module.course.title}</p>
               <CardTitle>{quiz.title}</CardTitle>
             </div>
             {bestAttempt && (

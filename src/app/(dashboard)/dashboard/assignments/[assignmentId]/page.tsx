@@ -22,12 +22,15 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
   const assignment = await db.assignment.findUnique({
     where: { id: params.assignmentId },
     include: {
-      course: {
+      module: {
         include: {
-          teacher: { select: { id: true, name: true } },
+          course: {
+            include: {
+              teacher: { select: { id: true, name: true } },
+            },
+          },
         },
       },
-      module: { select: { title: true } },
       submissions: {
         where: { studentId: user.id },
         orderBy: { submittedAt: "desc" },
@@ -40,7 +43,7 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
     notFound();
   }
 
-  const isTeacher = assignment.course.teacher.id === user.id;
+  const isTeacher = assignment.module.course.teacher.id === user.id;
   const submission = assignment.submissions[0];
   const isPastDue = new Date(assignment.dueDate) < new Date();
 
@@ -59,7 +62,7 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
         <CardHeader>
           <div className="flex items-start justify-between">
             <div>
-              <p className="text-sm text-gray-500 mb-1">{assignment.course.title} ? {assignment.module?.title}</p>
+              <p className="text-sm text-gray-500 mb-1">{assignment.module.course.title} {assignment.module?.title ? `| ${assignment.module.title}` : ''}</p>
               <CardTitle>{assignment.title}</CardTitle>
             </div>
             <div className="flex items-center gap-2">
