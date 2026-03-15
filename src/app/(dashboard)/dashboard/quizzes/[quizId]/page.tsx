@@ -22,19 +22,23 @@ export default async function QuizPage({ params }: QuizPageProps) {
   const quiz = await db.quiz.findUnique({
     where: { id: params.quizId },
     include: {
-      course: {
+      module: {
         include: {
-          teacher: { select: { id: true, name: true } },
-        },
+          course: {
+            include: {
+              teacher: { select: { id: true, name: true } },
+            },
+          }
+        }
       },
       questions: {
         orderBy: { order: "asc" },
       },
       attempts: {
         where: { studentId: user.id },
-        orderBy: { completedAt: "desc" },
-      },
-    },
+        orderBy: { submittedAt: "desc" },
+      }
+    }
   });
 
   if (!quiz) {

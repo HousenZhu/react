@@ -244,7 +244,8 @@ async function StudentCourseView({
             <CardContent className="space-y-3">
               {/* Contents */}
               {module.contents.map((content) => {
-                const isCompleted = enrollment.completedContentIds.includes(content.id);
+                // const isCompleted = enrollment.completedContentIds.includes(content.id);
+                const isCompleted = false;
                 return (
                   <Link
                     key={content.id}
