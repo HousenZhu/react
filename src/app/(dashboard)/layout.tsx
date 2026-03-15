@@ -4,6 +4,8 @@ import { getServerSession } from "@/lib/auth-server";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Header } from "@/components/layout/header";
 
+import Chatbot from "@/components/chatbot/chatbot";
+
 export default async function DashboardLayout({
   children,
 }: {
@@ -32,6 +34,8 @@ export default async function DashboardLayout({
           {children}
         </main>
       </div>
+      
+      <Chatbot />
     </div>
   );
 }
