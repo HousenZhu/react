@@ -1,4 +1,3 @@
-// src/app/(dashboard)/dashboard/courses/[courseId]/modules/[moduleId]/contents/create/page.tsx
 "use client";
 
 import { useState } from "react";
@@ -29,6 +28,8 @@ export default function CreateContentPage({ params }: CreateContentPageProps) {
   const [title, setTitle] = useState("");
   const [type, setType] = useState<ContentType>("PDF");
   const [fileUrl, setFileUrl] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [duration, setDuration] = useState("");
   const [error, setError] = useState("");
@@ -39,12 +40,39 @@ export default function CreateContentPage({ params }: CreateContentPageProps) {
     setError("");
     setLoading(true);
 
+    let uploadedUrl = fileUrl;
+    if (file && type !== "LINK") {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("folder", "contents");
+      try {
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        if (data.url) {
+          uploadedUrl = data.url;
+          setFileUrl(data.url);
+        } else {
+          throw new Error(data.error || "Upload failed");
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to upload file.");
+        setUploading(false);
+        setLoading(false);
+        return;
+      }
+      setUploading(false);
+    }
+
     try {
       await createContent({
         moduleId: params.moduleId,
         title,
         type,
-        fileUrl: type !== "LINK" ? fileUrl || undefined : undefined,
+        fileUrl: type !== "LINK" ? uploadedUrl || undefined : undefined,
         linkUrl: type === "LINK" ? linkUrl || undefined : undefined,
         duration: type === "VIDEO" && duration ? parseInt(duration) : undefined,
       });
@@ -68,7 +96,6 @@ export default function CreateContentPage({ params }: CreateContentPageProps) {
           Back to Module
         </Link>
       </div>
-
       <Card>
         <CardHeader>
           <CardTitle>Add Content</CardTitle>
@@ -80,7 +107,6 @@ export default function CreateContentPage({ params }: CreateContentPageProps) {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
-
             <div className="space-y-2">
               <Label htmlFor="title">Content Title</Label>
               <Input
@@ -91,52 +117,64 @@ export default function CreateContentPage({ params }: CreateContentPageProps) {
                 required
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="type">Content Type</Label>
               <select
                 id="type"
                 value={type}
                 onChange={(e) => setType(e.target.value as ContentType)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
               >
-                <option value="PDF">PDF Document</option>
+                <option value="PDF">PDF</option>
                 <option value="VIDEO">Video</option>
                 <option value="IMAGE">Image</option>
                 <option value="LINK">External Link</option>
               </select>
             </div>
-
-            {type === "LINK" ? (
+            {type !== "LINK" ? (
+              <div className="space-y-2">
+                <Label htmlFor="file">Upload File</Label>
+                <Input
+                  id="file"
+                  type="file"
+                  accept="application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/*,video/*"
+                  onChange={e => {
+                    setFile(e.target.files?.[0] || null);
+                  }}
+                />
+                {fileUrl && (
+                  <div className="mt-2">
+                    <Label htmlFor="fileUrl">File URL</Label>
+                    <Input
+                      id="fileUrl"
+                      type="url"
+                      value={fileUrl}
+                      onChange={e => setFileUrl(e.target.value)}
+                      readOnly
+                    />
+                  </div>
+                )}
+                {uploading && <p className="text-xs text-blue-500">Uploading file...</p>}
+                <p className="text-xs text-gray-500">
+                  Select a file to upload. The file will be stored in AWS S3 and its URL will be used for content.
+                </p>
+              </div>
+            ) : (
               <div className="space-y-2">
                 <Label htmlFor="linkUrl">External URL</Label>
                 <Input
                   id="linkUrl"
                   type="url"
-                  placeholder="https://example.com/resource"
+                  placeholder="https://storage.example.com/file.pdf"
                   value={linkUrl}
                   onChange={(e) => setLinkUrl(e.target.value)}
                   required
                 />
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <Label htmlFor="fileUrl">File URL</Label>
-                <Input
-                  id="fileUrl"
-                  type="url"
-                  placeholder="https://storage.example.com/file.pdf"
-                  value={fileUrl}
-                  onChange={(e) => setFileUrl(e.target.value)}
-                  required
-                />
                 <p className="text-xs text-gray-500">
-                  Upload your file first and paste the URL here
+                  Paste the external file or resource URL here.
                 </p>
               </div>
             )}
-
             {type === "VIDEO" && (
               <div className="space-y-2">
                 <Label htmlFor="duration">Duration (minutes)</Label>
