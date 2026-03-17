@@ -248,7 +248,7 @@ async function StudentCourseView({
                 return (
                   <Link
                     key={content.id}
-                    href={`/dashboard/courses/${course.id}/content/${content.id}`}
+                    href={`/dashboard/courses/${course.id}/modules/${module.id}/contents/${content.id}`}
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isCompleted ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
