@@ -45,7 +45,7 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
 
   const isTeacher = assignment.module.course.teacher.id === user.id;
   const submission = assignment.submissions[0];
-  const isPastDue = new Date(assignment.dueDate) < new Date();
+  const isPastDue = new Date(assignment.deadline) < new Date();
 
   return (
     <div className="max-w-3xl mx-auto space-y-6">
@@ -79,7 +79,14 @@ export default async function AssignmentPage({ params }: AssignmentPageProps) {
           <div className="grid sm:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-lg">
             <div>
               <p className="text-sm text-gray-500">Due Date</p>
-              <p className="font-medium">{new Date(assignment.dueDate).toLocaleString()}</p>
+              <p className="font-medium">{
+                (() => {
+                  const date = assignment.deadline ? new Date(assignment.deadline) : null;
+                  return date && !isNaN(date.getTime())
+                    ? date.toLocaleString()
+                    : "No due date";
+                })()
+              }</p>
             </div>
             <div>
               <p className="text-sm text-gray-500">Max Score</p>
