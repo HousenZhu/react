@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getServerSession } from "@/lib/auth-server";
 import { db } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle, Badge, Button } from "@/components/ui";
+import { GradeForm } from "./grade-form";
 
 interface SubmissionPageProps {
   params: { submissionId: string };
@@ -70,7 +71,7 @@ export default async function SubmissionPage({ params }: SubmissionPageProps) {
               </a>
             </div>
           )}
-          {/* Add grading/review form here if needed */}
+          <GradeForm submissionId={submission.id} maxScore={submission.assignment.maxScore} />
         </CardContent>
       </Card>
     </div>
