@@ -1,0 +1,3 @@
+# Project Introduction
+
+This project is a next-generation, full-stack web platform for online learning and course management. Built with Next.js, TypeScript, and Tailwind CSS, it enables students and instructors to manage courses, assignments, quizzes, and certificates. Key features include secure authentication, real-time discussions, cloud-based file uploads, and a scalable Prisma database. An integrated LLM-powered chatbot provides instant help and personalized support, enhancing usability and engagement for all users.

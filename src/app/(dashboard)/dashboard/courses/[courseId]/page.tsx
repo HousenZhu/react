@@ -73,7 +73,7 @@ interface CourseData {
     order: number;
     contents: Array<{ id: string; title: string; type: string }>;
     quizzes: Array<{ id: string; title: string }>;
-    assignments: Array<{ id: string; title: string; dueDate: Date }>;
+    assignments: Array<{ id: string; title: string; deadline: Date }>;
   }>;
   _count: { enrollments: number };
 }
@@ -244,12 +244,11 @@ async function StudentCourseView({
             <CardContent className="space-y-3">
               {/* Contents */}
               {module.contents.map((content) => {
-                // const isCompleted = enrollment.completedContentIds.includes(content.id);
-                const isCompleted = false;
+                const isCompleted = (enrollment?.completedContentIds ?? []).includes(content.id);
                 return (
                   <Link
                     key={content.id}
-                    href={`/dashboard/courses/${course.id}/content/${content.id}`}
+                    href={`/dashboard/courses/${course.id}/modules/${module.id}/contents/${content.id}`}
                     className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors"
                   >
                     <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isCompleted ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400'}`}>
@@ -298,7 +297,12 @@ async function StudentCourseView({
                   </div>
                   <span className="flex-1">{assignment.title}</span>
                   <span className="text-sm text-gray-500">
-                    Due {new Date(assignment.dueDate).toLocaleDateString()}
+                    Due {(() => {
+                      const date = assignment.deadline ? new Date(assignment.deadline) : null;
+                      return date && !isNaN(date.getTime())
+                        ? date.toLocaleDateString()
+                        : "No due date";
+                    })()}
                   </span>
                   <Badge variant="secondary">Assignment</Badge>
                 </Link>
