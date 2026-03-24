@@ -248,6 +248,32 @@ async function TeacherDashboard({ userId }: { userId: string }) {
     take: 10,
   });
 
+  // Get reviewed submissions
+  const reviewedSubmissions = await db.submission.findMany({
+    where: {
+      assignment: {
+        module: {
+          course: { teacherId: userId },
+        },
+      },
+      status: "GRADED",
+    },
+    include: {
+      student: { select: { name: true } },
+      assignment: {
+        include: {
+          module: {
+            include: {
+              course: { select: { title: true } },
+            },
+          },
+        },
+      },
+    },
+    orderBy: { gradedAt: "desc" },
+    take: 5,
+  });
+
   // Get total students
   const totalStudents = await db.enrollment.count({
     where: {
@@ -291,7 +317,7 @@ async function TeacherDashboard({ userId }: { userId: string }) {
         <StatCard title="Total Courses" value={courses.length} icon="courses" />
         <StatCard title="Total Students" value={totalStudents} icon="students" />
         <StatCard title="Pending Reviews" value={pendingSubmissions.length} icon="reviews" />
-        <StatCard title="Recent Discussions" value={recentDiscussions.length} icon="discussions" />
+        <StatCard title="Reviewed" value={reviewedSubmissions.length} icon="reviewed" />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
@@ -357,7 +383,7 @@ async function TeacherDashboard({ userId }: { userId: string }) {
                         {submission.assignment.title}
                       </p>
                       <p className="text-sm text-gray-500">
-                        by {submission.student.name || 'Unknown Student'} ? {submission.assignment.module.course.title}
+                        by {submission.student.name || 'Unknown Student'} &bull; {submission.assignment.module.course.title}
                       </p>
                     </div>
                     <Link
@@ -373,6 +399,52 @@ async function TeacherDashboard({ userId }: { userId: string }) {
           </CardContent>
         </Card>
       </div>
+
+      {/* Recently Reviewed */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Recently Reviewed</CardTitle>
+          <Link href="/dashboard/submissions?tab=reviewed" className="text-sm text-blue-600 hover:underline">
+            View all
+          </Link>
+        </CardHeader>
+        <CardContent>
+          {reviewedSubmissions.length === 0 ? (
+            <p className="text-gray-500 text-center py-4">No reviewed submissions yet.</p>
+          ) : (
+            <div className="divide-y">
+              {reviewedSubmissions.map((submission: { id: string; grade: number | null; student: { name: string | null }; assignment: { title: string; maxScore: number; module: { course: { title: string } } }; gradedAt: Date | null }) => (
+                <div key={submission.id} className="flex items-center justify-between py-3">
+                  <div>
+                    <p className="font-medium text-gray-900">{submission.assignment.title}</p>
+                    <p className="text-sm text-gray-500">
+                      by {submission.student.name || "Unknown Student"} &bull; {submission.assignment.module.course.title}
+                    </p>
+                    {submission.gradedAt && (
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        Reviewed on {new Date(submission.gradedAt).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {submission.grade !== null && (
+                      <span className="text-sm font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded">
+                        {submission.grade} / {submission.assignment.maxScore}
+                      </span>
+                    )}
+                    <Link
+                      href={`/dashboard/submissions/${submission.id}`}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
+                      View
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 }
@@ -411,6 +483,11 @@ const icons = {
   discussions: (
     <svg className="w-8 h-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+  ),
+  reviewed: (
+    <svg className="w-8 h-8 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7 4H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V6a2 2 0 00-2-2h-2M9 4h6a1 1 0 011 1v0a1 1 0 01-1 1H9a1 1 0 01-1-1v0a1 1 0 011-1z" />
     </svg>
   ),
 };
