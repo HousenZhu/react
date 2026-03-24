@@ -43,7 +43,11 @@ export default async function CertificatesPage() {
       {certificates.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center">
-            <div className="text-6xl mb-4">?</div>
+            <div className="flex justify-center mb-4">
+              <svg className="w-16 h-16 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 21h8m-4-4v4m-5-9h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v5a2 2 0 002 2zm-2-5H3a1 1 0 00-1 1v1a4 4 0 004 4h1m10-6h2a1 1 0 011 1v1a4 4 0 01-4 4h-1" />
+              </svg>
+            </div>
             <h3 className="text-lg font-semibold mb-2">No certificates yet</h3>
             <p className="text-gray-600 mb-4">
               Complete courses to earn certificates! Keep learning and you&apos;ll get there.
@@ -69,7 +73,9 @@ export default async function CertificatesPage() {
             <Card key={cert.id} className="overflow-hidden">
               <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white">
                 <div className="flex items-center justify-between">
-                  <span className="text-4xl">?</span>
+                  <svg className="w-10 h-10 text-yellow-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 21h8m-4-4v4m-5-9h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v5a2 2 0 002 2zm-2-5H3a1 1 0 00-1 1v1a4 4 0 004 4h1m10-6h2a1 1 0 011 1v1a4 4 0 01-4 4h-1" />
+                  </svg>
                   <Badge variant="outline" className="bg-white/20 text-white border-white/30">
                     Verified
                   </Badge>
