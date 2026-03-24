@@ -26,8 +26,22 @@ export default async function CoursePage({ params }: CoursePageProps) {
       modules: {
         include: {
           contents: true,
-          quizzes: true,
-          assignments: true,
+          quizzes: {
+            include: {
+              attempts: {
+                where: { studentId: user.id },
+                select: { passed: true },
+              },
+            },
+          },
+          assignments: {
+            include: {
+              submissions: {
+                where: { studentId: user.id },
+                select: { status: true },
+              },
+            },
+          },
         },
         orderBy: { order: "asc" },
       },
@@ -72,8 +86,8 @@ interface CourseData {
     description: string | null;
     order: number;
     contents: Array<{ id: string; title: string; type: string }>;
-    quizzes: Array<{ id: string; title: string }>;
-    assignments: Array<{ id: string; title: string; deadline: Date }>;
+    quizzes: Array<{ id: string; title: string; attempts: Array<{ passed: boolean }> }>;
+    assignments: Array<{ id: string; title: string; deadline: Date; submissions: Array<{ status: string }> }>;
   }>;
   _count: { enrollments: number };
 }
@@ -203,6 +217,30 @@ async function StudentCourseView({
   enrollment: EnrollmentData;
   userId: string;
 }) {
+  const totalItems =
+    course.modules.length +
+    course.modules.reduce(
+      (sum, module) => sum + module.assignments.length + module.quizzes.length,
+      0
+    );
+
+  const completedItems =
+    course.modules.filter((module) =>
+      module.quizzes.some((quiz) => quiz.attempts.some((attempt) => attempt.passed))
+    ).length +
+    course.modules.reduce((sum, module) => {
+      const completedAssignments = module.assignments.filter((assignment) =>
+        assignment.submissions.some((submission) => submission.status === "GRADED")
+      ).length;
+      const completedQuizzes = module.quizzes.filter((quiz) =>
+        quiz.attempts.some((attempt) => attempt.passed)
+      ).length;
+      return sum + completedAssignments + completedQuizzes;
+    }, 0);
+
+  const completionPct =
+    totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
@@ -218,11 +256,11 @@ async function StudentCourseView({
         </div>
         <div className="text-right">
           <p className="text-sm text-gray-500">Progress</p>
-          <p className="text-2xl font-bold text-blue-600">{enrollment.progress}%</p>
+          <p className="text-2xl font-bold text-blue-600">{completionPct}%</p>
         </div>
       </div>
 
-      <Progress value={enrollment.progress} className="h-3" />
+      <Progress value={completionPct} className="h-3" />
 
       {course.description && (
         <p className="text-gray-600">{course.description}</p>

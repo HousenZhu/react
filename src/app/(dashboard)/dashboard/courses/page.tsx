@@ -95,7 +95,26 @@ export default async function CoursesPage() {
       course: {
         include: {
           teacher: { select: { name: true } },
-          _count: { select: { modules: true } },
+          modules: {
+            include: {
+              quizzes: {
+                include: {
+                  attempts: {
+                    where: { studentId: user.id },
+                    select: { passed: true },
+                  },
+                },
+              },
+              assignments: {
+                include: {
+                  submissions: {
+                    where: { studentId: user.id },
+                    select: { status: true },
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -125,31 +144,60 @@ export default async function CoursesPage() {
         </Card>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {enrollments.map((enrollment: { id: string; progress: number; course: { id: string; title: string; description: string | null; teacher: { name: string }; _count: { modules: number } } }) => (
-            <Card key={enrollment.id}>
-              <CardHeader>
-                <CardTitle className="text-lg">{enrollment.course.title}</CardTitle>
-                <p className="text-sm text-gray-500">by {enrollment.course.teacher.name || 'Unknown Instructor'}</p>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                  {enrollment.course.description || "No description"}
-                </p>
-                <div className="mb-4">
-                  <div className="flex items-center justify-between text-sm mb-1">
-                    <span className="text-gray-500">Progress</span>
-                    <span className="font-medium">{enrollment.progress}%</span>
+          {enrollments.map((enrollment: any) => {
+            const totalItems =
+              enrollment.course.modules.length +
+              enrollment.course.modules.reduce(
+                (sum: number, module: any) =>
+                  sum + module.assignments.length + module.quizzes.length,
+                0
+              );
+
+            const completedItems =
+              enrollment.course.modules.filter((module: any) =>
+                module.quizzes.some((quiz: any) =>
+                  quiz.attempts.some((attempt: any) => attempt.passed)
+                )
+              ).length +
+              enrollment.course.modules.reduce((sum: number, module: any) => {
+                const completedAssignments = module.assignments.filter((assignment: any) =>
+                  assignment.submissions.some((submission: any) => submission.status === "GRADED")
+                ).length;
+                const completedQuizzes = module.quizzes.filter((quiz: any) =>
+                  quiz.attempts.some((attempt: any) => attempt.passed)
+                ).length;
+                return sum + completedAssignments + completedQuizzes;
+              }, 0);
+
+            const completionPct =
+              totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
+            return (
+              <Card key={enrollment.id}>
+                <CardHeader>
+                  <CardTitle className="text-lg">{enrollment.course.title}</CardTitle>
+                  <p className="text-sm text-gray-500">by {enrollment.course.teacher.name || 'Unknown Instructor'}</p>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-gray-600 mb-4 line-clamp-2">
+                    {enrollment.course.description || "No description"}
+                  </p>
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between text-sm mb-1">
+                      <span className="text-gray-500">Progress</span>
+                      <span className="font-medium">{completionPct}%</span>
+                    </div>
+                    <Progress value={completionPct} />
                   </div>
-                  <Progress value={enrollment.progress} />
-                </div>
-                <Link href={`/dashboard/courses/${enrollment.course.id}`}>
-                  <Button className="w-full">
-                    {enrollment.progress > 0 ? "Continue Learning" : "Start Course"}
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          ))}
+                  <Link href={`/dashboard/courses/${enrollment.course.id}`}>
+                    <Button className="w-full">
+                      {completionPct > 0 ? "Continue Learning" : "Start Course"}
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
       )}
     </div>

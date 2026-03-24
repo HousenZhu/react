@@ -32,9 +32,22 @@ async function StudentDashboard({ userId }: { userId: string }) {
           teacher: { select: { name: true } },
           modules: {
             include: {
-              contents: true,
-              quizzes: true,
-              assignments: true,
+              quizzes: {
+                include: {
+                  attempts: {
+                    where: { studentId: userId },
+                    select: { passed: true },
+                  },
+                },
+              },
+              assignments: {
+                include: {
+                  submissions: {
+                    where: { studentId: userId },
+                    select: { status: true },
+                  },
+                },
+              },
             },
           },
           _count: {
@@ -137,27 +150,56 @@ async function StudentDashboard({ userId }: { userId: string }) {
               </p>
             ) : (
               <div className="space-y-4">
-                {enrollments.map((enrollment: { id: string; progress: number; course: { id: string; title: string; teacher: { name: string } } }) => (
-                  <div key={enrollment.id} className="flex items-center gap-4">
-                    <div className="flex-1">
-                      <Link
-                        href={`/dashboard/courses/${enrollment.course.id}`}
-                        className="font-medium text-gray-900 hover:text-blue-600"
-                      >
-                        {enrollment.course.title}
-                      </Link>
-                      <p className="text-sm text-gray-500">
-                        by {enrollment.course.teacher.name || 'Unknown Instructor'}
-                      </p>
+                {enrollments.map((enrollment: any) => {
+                  const totalItems =
+                    enrollment.course.modules.length +
+                    enrollment.course.modules.reduce(
+                      (sum: number, module: any) =>
+                        sum + module.assignments.length + module.quizzes.length,
+                      0
+                    );
+
+                  const completedItems =
+                    enrollment.course.modules.filter((module: any) =>
+                      module.quizzes.some((quiz: any) =>
+                        quiz.attempts.some((attempt: any) => attempt.passed)
+                      )
+                    ).length +
+                    enrollment.course.modules.reduce((sum: number, module: any) => {
+                      const completedAssignments = module.assignments.filter((assignment: any) =>
+                        assignment.submissions.some((submission: any) => submission.status === "GRADED")
+                      ).length;
+                      const completedQuizzes = module.quizzes.filter((quiz: any) =>
+                        quiz.attempts.some((attempt: any) => attempt.passed)
+                      ).length;
+                      return sum + completedAssignments + completedQuizzes;
+                    }, 0);
+
+                  const completionPct =
+                    totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
+                  return (
+                    <div key={enrollment.id} className="flex items-center gap-4">
+                      <div className="flex-1">
+                        <Link
+                          href={`/dashboard/courses/${enrollment.course.id}`}
+                          className="font-medium text-gray-900 hover:text-blue-600"
+                        >
+                          {enrollment.course.title}
+                        </Link>
+                        <p className="text-sm text-gray-500">
+                          by {enrollment.course.teacher.name || 'Unknown Instructor'}
+                        </p>
+                      </div>
+                      <div className="w-24">
+                        <Progress value={completionPct} />
+                        <p className="text-xs text-gray-500 text-right mt-1">
+                          {completionPct}%
+                        </p>
+                      </div>
                     </div>
-                    <div className="w-24">
-                      <Progress value={enrollment.progress} />
-                      <p className="text-xs text-gray-500 text-right mt-1">
-                        {enrollment.progress}%
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </CardContent>
