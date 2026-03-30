@@ -42,9 +42,8 @@ export default function Chatbot() {
     <div className="fixed bottom-4 right-4 w-96 bg-white shadow-xl rounded-xl p-4">
       <div className="h-80 overflow-y-auto mb-3">
         {messages.map((m, i) => (
-          <div key={i} className="mb-3">
-            <b>{m.role === "user" ? "You" : "AI"}:</b>
-            <p className="mt-1 whitespace-pre-wrap break-words">{m.content}</p>
+          <div key={i} className="mb-2">
+            <b>{m.role === "user" ? "You" : "AI"}:</b> {m.content}
           </div>
         ))}
         {loading && <p>AI is thinking...</p>}
