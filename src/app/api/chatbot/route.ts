@@ -43,7 +43,10 @@ export async function POST(req: NextRequest) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "qwen-turbo",
+        // model: "qwen-turbo" 不免费了
+        // model: "qwen3.5-flash-2026-02-23", 免费但是慢
+        // model: "qwen3.5-plus", 免费但是慢
+        model: "qwen3.5-35b-a3b", // 免费但是慢
         messages: [
           { role: "system", content: systemPrompt },
           ...cleanMessages,
