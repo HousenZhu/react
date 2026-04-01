@@ -2,6 +2,10 @@
 
 A full-stack learning management system built with Next.js 14, TypeScript, PostgreSQL, and Better Auth.
 
+## Video Demo
+
+https://www.youtube.com/watch?v=XEOUFniIkoA
+
 ## ? Features
 
 - **User Authentication**: Secure registration/login with role-based access (Teacher/Student)
@@ -98,38 +102,38 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ```
 src/
-©À©¤©¤ app/                    # Next.js App Router pages
-©¦   ©À©¤©¤ api/               # API routes
-©¦   ©¦   ©À©¤©¤ auth/          # Better Auth endpoints
-©¦   ©¦   ©À©¤©¤ upload/        # File upload handling
-©¦   ©¦   ©À©¤©¤ calendar/      # ICS export
-©¦   ©¦   ©À©¤©¤ certificates/  # Certificate verification
-©¦   ©¦   ©¸©¤©¤ discussion/    # Real-time SSE
-©¦   ©À©¤©¤ (auth)/            # Auth pages (login, register)
-©¦   ©¸©¤©¤ (dashboard)/       # Protected dashboard pages
-©À©¤©¤ actions/               # Server Actions
-©¦   ©À©¤©¤ course.ts          # Course CRUD
-©¦   ©À©¤©¤ enrollment.ts      # Enrollment management
-©¦   ©À©¤©¤ module.ts          # Module management
-©¦   ©À©¤©¤ content.ts         # Content management
-©¦   ©À©¤©¤ quiz.ts            # Quiz & questions
-©¦   ©À©¤©¤ assignment.ts      # Assignment management
-©¦   ©À©¤©¤ submission.ts      # Submission & grading
-©¦   ©À©¤©¤ discussion.ts      # Discussion posts
-©¦   ©À©¤©¤ certificate.ts     # Certificate generation
-©¦   ©¸©¤©¤ analytics.ts       # Dashboard analytics
-©À©¤©¤ lib/                   # Utilities
-©¦   ©À©¤©¤ auth.ts            # Better Auth config
-©¦   ©À©¤©¤ auth-server.ts     # Server-side auth helpers
-©¦   ©À©¤©¤ auth-client.ts     # Client-side auth
-©¦   ©À©¤©¤ db.ts              # Prisma client
-©¦   ©À©¤©¤ storage.ts         # Local file storage
-©¦   ©À©¤©¤ pdf.ts             # Certificate PDF generation
-©¦   ©À©¤©¤ calendar.ts        # ICS generation
-©¦   ©À©¤©¤ validations.ts     # Zod schemas
-©¦   ©¸©¤©¤ utils.ts           # Helper functions
-©À©¤©¤ types/                 # TypeScript types
-©¸©¤©¤ middleware.ts          # Route protection
+å¿µå²¸å²¸ app/                    # Next.js App Router pages
+å²«   å¿µå²¸å²¸ api/               # API routes
+å²«   å²«   å¿µå²¸å²¸ auth/          # Better Auth endpoints
+å²«   å²«   å¿µå²¸å²¸ upload/        # File upload handling
+å²«   å²«   å¿µå²¸å²¸ calendar/      # ICS export
+å²«   å²«   å¿µå²¸å²¸ certificates/  # Certificate verification
+å²«   å²«   å¼©å²¸å²¸ discussion/    # Real-time SSE
+å²«   å¿µå²¸å²¸ (auth)/            # Auth pages (login, register)
+å²«   å¼©å²¸å²¸ (dashboard)/       # Protected dashboard pages
+å¿µå²¸å²¸ actions/               # Server Actions
+å²«   å¿µå²¸å²¸ course.ts          # Course CRUD
+å²«   å¿µå²¸å²¸ enrollment.ts      # Enrollment management
+å²«   å¿µå²¸å²¸ module.ts          # Module management
+å²«   å¿µå²¸å²¸ content.ts         # Content management
+å²«   å¿µå²¸å²¸ quiz.ts            # Quiz & questions
+å²«   å¿µå²¸å²¸ assignment.ts      # Assignment management
+å²«   å¿µå²¸å²¸ submission.ts      # Submission & grading
+å²«   å¿µå²¸å²¸ discussion.ts      # Discussion posts
+å²«   å¿µå²¸å²¸ certificate.ts     # Certificate generation
+å²«   å¼©å²¸å²¸ analytics.ts       # Dashboard analytics
+å¿µå²¸å²¸ lib/                   # Utilities
+å²«   å¿µå²¸å²¸ auth.ts            # Better Auth config
+å²«   å¿µå²¸å²¸ auth-server.ts     # Server-side auth helpers
+å²«   å¿µå²¸å²¸ auth-client.ts     # Client-side auth
+å²«   å¿µå²¸å²¸ db.ts              # Prisma client
+å²«   å¿µå²¸å²¸ storage.ts         # Local file storage
+å²«   å¿µå²¸å²¸ pdf.ts             # Certificate PDF generation
+å²«   å¿µå²¸å²¸ calendar.ts        # ICS generation
+å²«   å¿µå²¸å²¸ validations.ts     # Zod schemas
+å²«   å¼©å²¸å²¸ utils.ts           # Helper functions
+å¿µå²¸å²¸ types/                 # TypeScript types
+å¼©å²¸å²¸ middleware.ts          # Route protection
 ```
 
 ## ?? Database Schema
@@ -147,10 +151,10 @@ src/
 
 ### Key Relationships
 
-- User ¡ú Course (1:N as teacher)
+- User â†™ Course (1:N as teacher)
 - User ? Course (M:N via Enrollment)
-- Course ¡ú Module ¡ú Content/Quiz/Assignment
-- User ¡ú Submission ¡ú Assignment
+- Course â†™ Module â†™ Content/Quiz/Assignment
+- User â†™ Submission â†™ Assignment
 
 ## ? Authentication
 
