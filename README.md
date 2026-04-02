@@ -55,10 +55,7 @@ The system supports end-to-end learning management workflows for both instructor
 	- Certificates generated and displayed for completed learning outcomes.
 	- Verifiable listing and downloadable certificate files.
 
-8. **Real-time discussion support**
-	- Discussion stream endpoint and message broadcasting support course communication features.
-
-9. **Integrated AI chatbot**
+8. **Integrated AI chatbot**
 	- In-dashboard assistant for quick support.
 	- Includes minimize/expand interaction to avoid interrupting core workflows.
 
