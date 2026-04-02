@@ -13,7 +13,6 @@ import { uploadFile } from "@/lib/storage";
 export async function generateCertificate(courseId: string) {
   const user = await requireAuth();
 
-  // Check enrollment and completion
   const enrollment = await db.enrollment.findUnique({
     where: {
       studentId_courseId: {
@@ -22,7 +21,30 @@ export async function generateCertificate(courseId: string) {
       },
     },
     include: {
-      course: true,
+      course: {
+        include: {
+          modules: {
+            include: {
+              quizzes: {
+                include: {
+                  attempts: {
+                    where: { studentId: user.id },
+                    select: { passed: true },
+                  },
+                },
+              },
+              assignments: {
+                include: {
+                  submissions: {
+                    where: { studentId: user.id },
+                    select: { status: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
 
@@ -30,7 +52,35 @@ export async function generateCertificate(courseId: string) {
     throw new Error("Not enrolled in this course");
   }
 
-  if (!enrollment.completed && enrollment.progress < 100) {
+  const totalItems =
+    enrollment.course.modules.reduce(
+      (sum, module) => sum + module.assignments.length + module.quizzes.length,
+      0
+    );
+
+  const completedItems =
+    enrollment.course.modules.reduce((sum, module) => {
+      const completedAssignments = module.assignments.filter((assignment) =>
+        assignment.submissions.length > 0
+      ).length;
+      const completedQuizzes = module.quizzes.filter((quiz) =>
+        quiz.attempts.some((attempt) => attempt.passed)
+      ).length;
+      return sum + completedAssignments + completedQuizzes;
+    }, 0);
+
+  const computedProgress =
+    totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
+  await db.enrollment.update({
+    where: { id: enrollment.id },
+    data: {
+      progress: computedProgress,
+      completed: computedProgress >= 100,
+    },
+  });
+
+  if (computedProgress < 100) {
     throw new Error("Course not completed yet");
   }
 

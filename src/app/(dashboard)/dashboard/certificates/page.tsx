@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getServerSession } from "@/lib/auth-server";
 import { db } from "@/lib/db";
+import { generateCertificate } from "@/actions/certificate";
 import { Card, CardContent, CardHeader, CardTitle, Badge, Button } from "@/components/ui";
 
 export default async function CertificatesPage() {
@@ -31,6 +32,86 @@ export default async function CertificatesPage() {
     orderBy: { generatedAt: "desc" },
   });
 
+  const enrollments = await db.enrollment.findMany({
+    where: { studentId: user.id },
+    include: {
+      course: {
+        include: {
+          teacher: {
+            select: { name: true },
+          },
+          certificates: {
+            where: { studentId: user.id },
+            select: { id: true },
+          },
+          modules: {
+            include: {
+              quizzes: {
+                include: {
+                  attempts: {
+                    where: { studentId: user.id },
+                    select: { passed: true },
+                  },
+                },
+              },
+              assignments: {
+                include: {
+                  submissions: {
+                    where: { studentId: user.id },
+                    select: { status: true },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+  const eligibleCourses = enrollments
+    .map((enrollment: any) => {
+      const totalItems =
+        enrollment.course.modules.reduce(
+          (sum: number, module: any) => sum + module.assignments.length + module.quizzes.length,
+          0
+        );
+
+      const completedItems =
+        enrollment.course.modules.reduce((sum: number, module: any) => {
+          const completedAssignments = module.assignments.filter((assignment: any) =>
+            assignment.submissions.length > 0
+          ).length;
+          const completedQuizzes = module.quizzes.filter((quiz: any) =>
+            quiz.attempts.some((attempt: any) => attempt.passed)
+          ).length;
+          return sum + completedAssignments + completedQuizzes;
+        }, 0);
+
+      const completionPct = totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
+      return {
+        courseId: enrollment.course.id,
+        title: enrollment.course.title,
+        teacherName: enrollment.course.teacher.name,
+        completionPct,
+        hasCertificate: enrollment.course.certificates.length > 0,
+      };
+    })
+    .filter((course) => course.completionPct >= 100 && !course.hasCertificate);
+
+  async function handleGenerateCertificate(formData: FormData) {
+    "use server";
+
+    const courseId = String(formData.get("courseId") || "");
+    if (!courseId) {
+      throw new Error("Course ID is required");
+    }
+
+    await generateCertificate(courseId);
+    redirect("/dashboard/certificates");
+  }
+
   return (
     <div className="space-y-6">
       <div>
@@ -39,6 +120,30 @@ export default async function CertificatesPage() {
           Your earned certificates for completed courses
         </p>
       </div>
+
+      {eligibleCourses.length > 0 && (
+        <Card className="border-blue-200 bg-blue-50/50">
+          <CardHeader>
+            <CardTitle>Ready to Claim</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {eligibleCourses.map((course) => (
+                <div key={course.courseId} className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border rounded-lg bg-white p-4">
+                  <div>
+                    <p className="font-medium text-gray-900">{course.title}</p>
+                    <p className="text-sm text-gray-500">Instructor: {course.teacherName || "Unknown Instructor"}</p>
+                  </div>
+                  <form action={handleGenerateCertificate}>
+                    <input type="hidden" name="courseId" value={course.courseId} />
+                    <Button type="submit">Generate Certificate</Button>
+                  </form>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       {certificates.length === 0 ? (
         <Card>

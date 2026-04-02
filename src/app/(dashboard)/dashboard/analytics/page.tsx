@@ -150,15 +150,11 @@ export default async function AnalyticsPage() {
                     );
 
                     const totalLearningItems =
-                      course._count.modules +
                       allSubmissions.length +
                       allAttempts.length;
 
                     const completedItems =
-                      (course.enrollments.length > 0
-                        ? course.enrollments.filter((e: any) => e.completed).length
-                        : 0) +
-                      allSubmissions.filter((s: any) => s.status === "GRADED").length +
+                      allSubmissions.length +
                       allAttempts.filter((a: any) => a.passed).length;
 
                     const courseCompletionPct =
@@ -204,7 +200,7 @@ export default async function AnalyticsPage() {
                           <p className="text-xs text-gray-400 mt-0.5">{completedItems} of {totalLearningItems}</p>
                         </td>
                         <td className="py-3 text-center text-gray-600">
-                          {allSubmissions.filter((s: any) => s.status === "GRADED").length}
+                          {allSubmissions.length}
                           <span className="text-gray-400"> / {allSubmissions.length}</span>
                         </td>
                         <td className="py-3 text-center text-gray-600">

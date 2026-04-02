@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerSession } from "@/lib/auth-server";
 import { db } from "@/lib/db";
+import { generateCertificate } from "@/actions/certificate";
 import { Card, CardContent, CardHeader, CardTitle, Badge, Progress, Button, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui";
 
 interface CoursePageProps {
@@ -47,6 +48,14 @@ export default async function CoursePage({ params }: CoursePageProps) {
       },
       enrollments: {
         where: { studentId: user.id },
+      },
+      certificates: {
+        where: { studentId: user.id },
+        select: {
+          id: true,
+          fileUrl: true,
+          certificateNumber: true,
+        },
       },
       _count: {
         select: { enrollments: true },
@@ -132,6 +141,7 @@ interface CourseData {
     quizzes: Array<{ id: string; title: string; attempts: Array<{ passed: boolean }> }>;
     assignments: Array<{ id: string; title: string; deadline: Date; submissions: Array<{ status: string }> }>;
   }>;
+  certificates?: Array<{ id: string; fileUrl: string; certificateNumber: string }>;
   _count: { enrollments: number };
 }
 
@@ -383,20 +393,17 @@ async function StudentCourseView({
   enrollment: EnrollmentData;
   userId: string;
 }) {
+  const existingCertificate = course.certificates?.[0] ?? null;
   const totalItems =
-    course.modules.length +
     course.modules.reduce(
       (sum, module) => sum + module.assignments.length + module.quizzes.length,
       0
     );
 
   const completedItems =
-    course.modules.filter((module) =>
-      module.quizzes.some((quiz) => quiz.attempts.some((attempt) => attempt.passed))
-    ).length +
     course.modules.reduce((sum, module) => {
       const completedAssignments = module.assignments.filter((assignment) =>
-        assignment.submissions.some((submission) => submission.status === "GRADED")
+        assignment.submissions.length > 0
       ).length;
       const completedQuizzes = module.quizzes.filter((quiz) =>
         quiz.attempts.some((attempt) => attempt.passed)
@@ -406,6 +413,13 @@ async function StudentCourseView({
 
   const completionPct =
     totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
+  async function handleGenerateCertificate() {
+    "use server";
+
+    await generateCertificate(course.id);
+    redirect("/dashboard/certificates");
+  }
 
   return (
     <div className="space-y-6">
@@ -430,6 +444,35 @@ async function StudentCourseView({
 
       {course.description && (
         <p className="text-gray-600">{course.description}</p>
+      )}
+
+      {(completionPct >= 100 || existingCertificate) && (
+        <Card className="border-green-200 bg-green-50/60">
+          <CardContent className="p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <p className="text-lg font-semibold text-gray-900">Course Completion Reward</p>
+              <p className="text-sm text-gray-600">
+                {existingCertificate
+                  ? "Your certificate is ready to view or download."
+                  : "You have completed this course and can now generate your certificate."}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {existingCertificate?.fileUrl ? (
+                <a href={existingCertificate.fileUrl} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline">Download Certificate</Button>
+                </a>
+              ) : (
+                <form action={handleGenerateCertificate}>
+                  <Button type="submit">Generate Certificate</Button>
+                </form>
+              )}
+              <Link href="/dashboard/certificates">
+                <Button variant="outline">View Certificates</Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       <div className="space-y-4">

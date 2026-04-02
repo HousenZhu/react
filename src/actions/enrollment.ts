@@ -165,7 +165,6 @@ export async function recalculateProgress(courseId: string) {
         where: {
           assignmentId: assignment.id,
           studentId: user.id,
-          status: "GRADED",
         },
       });
       if (submission) completedItems++;

@@ -152,7 +152,6 @@ async function StudentDashboard({ userId }: { userId: string }) {
               <div className="space-y-4">
                 {enrollments.map((enrollment: any) => {
                   const totalItems =
-                    enrollment.course.modules.length +
                     enrollment.course.modules.reduce(
                       (sum: number, module: any) =>
                         sum + module.assignments.length + module.quizzes.length,
@@ -160,14 +159,9 @@ async function StudentDashboard({ userId }: { userId: string }) {
                     );
 
                   const completedItems =
-                    enrollment.course.modules.filter((module: any) =>
-                      module.quizzes.some((quiz: any) =>
-                        quiz.attempts.some((attempt: any) => attempt.passed)
-                      )
-                    ).length +
                     enrollment.course.modules.reduce((sum: number, module: any) => {
                       const completedAssignments = module.assignments.filter((assignment: any) =>
-                        assignment.submissions.some((submission: any) => submission.status === "GRADED")
+                        assignment.submissions.length > 0
                       ).length;
                       const completedQuizzes = module.quizzes.filter((quiz: any) =>
                         quiz.attempts.some((attempt: any) => attempt.passed)

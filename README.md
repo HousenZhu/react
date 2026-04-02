@@ -1,305 +1,223 @@
-# Personalized Learning Platform
+# Final Report
 
-A full-stack learning management system built with Next.js 14, TypeScript, PostgreSQL, and Better Auth.
+## Team Information
 
-## ? Features
+## Motivation
 
-- **User Authentication**: Secure registration/login with role-based access (Teacher/Student)
-- **Course Management**: Create, edit, and publish courses with modules
-- **Content Delivery**: Support for PDFs, videos, and external links
-- **Quizzes**: Multiple-choice quizzes with automatic grading
-- **Assignments**: Submit work, receive grades and feedback
-- **Progress Tracking**: Monitor completion percentage and analytics
-- **Discussion Forums**: Real-time course discussions
-- **Certificates**: Generate PDF certificates on course completion
-- **Calendar Export**: Export deadlines to .ics format
-
-## ?? Tech Stack
-
-| Layer | Technology |
-|-------|------------|
-| Framework | Next.js 14 (App Router) |
-| Language | TypeScript |
-| Database | PostgreSQL + Prisma |
-| Auth | Better Auth |
-| Storage | Local filesystem |
-| Styling | Tailwind CSS |
-| Validation | Zod |
-
-## ? Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL 14+
-- npm or yarn
-
-### 1. Install Dependencies
-
-```bash
-cd react
-npm install
-```
-
-### 2. Set Up PostgreSQL Database
-
-```bash
-# Connect to PostgreSQL
-psql -U postgres
-
-# Create database and user
-CREATE DATABASE learning_platform;
-CREATE USER learning_user WITH ENCRYPTED PASSWORD 'your_password';
-GRANT ALL PRIVILEGES ON DATABASE learning_platform TO learning_user;
-
-# Grant schema permissions
-\c learning_platform
-GRANT ALL ON SCHEMA public TO learning_user;
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO learning_user;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO learning_user;
-\q
-```
-
-### 3. Configure Environment Variables
-
-```bash
-cp .env.example .env
-```
-
-Update `.env` with your values:
-
-```env
-# Database
-DATABASE_URL="postgresql://learning_user:your_password@localhost:5432/learning_platform"
-
-# Auth (generate with: openssl rand -base64 32)
-BETTER_AUTH_SECRET="your-generated-secret"
-BETTER_AUTH_URL="http://localhost:3000"
-
-# App
-NEXT_PUBLIC_APP_URL="http://localhost:3000"
-```
-
-### 4. Push Database Schema
-
-```bash
-npm run db:push
-```
-
-### 5. Start Development Server
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000)
-
-## ? Project Structure
-
-```
-src/
-©À©¤©¤ app/                    # Next.js App Router pages
-©¦   ©À©¤©¤ api/               # API routes
-©¦   ©¦   ©À©¤©¤ auth/          # Better Auth endpoints
-©¦   ©¦   ©À©¤©¤ upload/        # File upload handling
-©¦   ©¦   ©À©¤©¤ calendar/      # ICS export
-©¦   ©¦   ©À©¤©¤ certificates/  # Certificate verification
-©¦   ©¦   ©¸©¤©¤ discussion/    # Real-time SSE
-©¦   ©À©¤©¤ (auth)/            # Auth pages (login, register)
-©¦   ©¸©¤©¤ (dashboard)/       # Protected dashboard pages
-©À©¤©¤ actions/               # Server Actions
-©¦   ©À©¤©¤ course.ts          # Course CRUD
-©¦   ©À©¤©¤ enrollment.ts      # Enrollment management
-©¦   ©À©¤©¤ module.ts          # Module management
-©¦   ©À©¤©¤ content.ts         # Content management
-©¦   ©À©¤©¤ quiz.ts            # Quiz & questions
-©¦   ©À©¤©¤ assignment.ts      # Assignment management
-©¦   ©À©¤©¤ submission.ts      # Submission & grading
-©¦   ©À©¤©¤ discussion.ts      # Discussion posts
-©¦   ©À©¤©¤ certificate.ts     # Certificate generation
-©¦   ©¸©¤©¤ analytics.ts       # Dashboard analytics
-©À©¤©¤ lib/                   # Utilities
-©¦   ©À©¤©¤ auth.ts            # Better Auth config
-©¦   ©À©¤©¤ auth-server.ts     # Server-side auth helpers
-©¦   ©À©¤©¤ auth-client.ts     # Client-side auth
-©¦   ©À©¤©¤ db.ts              # Prisma client
-©¦   ©À©¤©¤ storage.ts         # Local file storage
-©¦   ©À©¤©¤ pdf.ts             # Certificate PDF generation
-©¦   ©À©¤©¤ calendar.ts        # ICS generation
-©¦   ©À©¤©¤ validations.ts     # Zod schemas
-©¦   ©¸©¤©¤ utils.ts           # Helper functions
-©À©¤©¤ types/                 # TypeScript types
-©¸©¤©¤ middleware.ts          # Route protection
-```
-
-## ?? Database Schema
-
-### Core Entities
-
-- **User**: Teachers and students with role-based access
-- **Course**: Created by teachers, enrolled by students
-- **Module**: Organizes course content
-- **Content**: PDF, video, link resources
-- **Quiz/Question**: Multiple-choice assessments
-- **Assignment/Submission**: Student work and grading
-- **DiscussionPost**: Course forums with replies
-- **Certificate**: Completion certificates
-
-### Key Relationships
-
-- User ¡ú Course (1:N as teacher)
-- User ? Course (M:N via Enrollment)
-- Course ¡ú Module ¡ú Content/Quiz/Assignment
-- User ¡ú Submission ¡ú Assignment
-
-## ? Authentication
-
-Using Better Auth with email/password:
-
-```typescript
-// Client-side
-import { signIn, signUp, signOut, useSession } from "@/lib/auth-client";
-
-// Sign up
-await signUp.email({
-  email: "user@example.com",
-  password: "password123",
-  name: "John Doe",
-  role: "STUDENT", // or "TEACHER"
-});
-
-// Sign in
-await signIn.email({
-  email: "user@example.com",
-  password: "password123",
-});
-```
-
-## ? Server Actions
-
-All mutations use Next.js Server Actions:
-
-```typescript
-// Course operations
-import { createCourse, updateCourse, deleteCourse } from "@/actions";
-
-// Create a course (teacher only)
-const course = await createCourse({
-  title: "Web Development 101",
-  description: "Learn the basics",
-});
-
-// Enroll in a course (student)
-import { enrollInCourse } from "@/actions";
-await enrollInCourse(courseId);
-```
-
-## ? File Uploads
-
-Files are stored locally in `/public/uploads/`:
-
-```typescript
-// Client-side upload
-const formData = new FormData();
-formData.append("file", file);
-formData.append("folder", "submissions");
-
-const response = await fetch("/api/upload", {
-  method: "POST",
-  body: formData,
-});
-
-const { url, key } = await response.json();
-```
-
-## ? Calendar Export
-
-Export deadlines to calendar:
-
-```typescript
-// Download .ics file
-window.location.href = `/api/calendar/export?courseId=${courseId}`;
-```
-
-## ? Testing the API
-
-```bash
-# Register a new user
-curl -X POST http://localhost:3000/api/auth/sign-up/email \
-  -H "Content-Type: application/json" \
-  -d '{"email": "test@example.com", "password": "password123", "name": "Test User"}'
-
-# Login and save session
-curl -X POST http://localhost:3000/api/auth/sign-in/email \
-  -H "Content-Type: application/json" \
-  -c cookies.txt \
-  -d '{"email": "test@example.com", "password": "password123"}'
-
-# Check session
-curl http://localhost:3000/api/auth/get-session -b cookies.txt
-
-# Upload a file (authenticated)
-curl -X POST http://localhost:3000/api/upload \
-  -b cookies.txt \
-  -F "file=@/path/to/file.pdf"
-
-# Verify a certificate
-curl "http://localhost:3000/api/certificates/verify?number=CERT-123456"
-```
-
-## ?? Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start development server |
-| `npm run build` | Production build |
-| `npm run start` | Start production server |
-| `npm run lint` | Run ESLint |
-| `npm run db:generate` | Generate Prisma client |
-| `npm run db:push` | Push schema to database |
-| `npm run db:studio` | Open Prisma Studio (GUI) |
-| `npm run db:seed` | Seed sample data |
-
-## ? Troubleshooting
-
-### Database Connection Error
-
-Ensure PostgreSQL is running:
-
-```bash
-# Test connection
-psql -d learning_platform -U learning_user
-```
-
-### Permission Denied for Schema
-
-Grant schema permissions:
-
-```sql
-\c learning_platform
-GRANT ALL ON SCHEMA public TO learning_user;
-```
-
-### Port Already in Use
-
-```bash
-lsof -ti:3000 | xargs kill -9
-```
-
-### Update User Role to Teacher
-
-```bash
-psql -d learning_platform -c "UPDATE users SET role = 'TEACHER' WHERE email = 'your@email.com';"
-```
-
-## ? Team
-
-| Member | Responsibilities |
-|--------|-----------------|
-| Zhiyuan Diao | Architecture, Auth, Database |
-| Housen Zhu | Course, Assignment, Grading |
-| Tianrui Du | Analytics, Calendar, Certificates |
-
-## ? License
-
-MIT License - Built for CS Course Project
+## Objectives
+
+## Technical Stack
+
+- **Chosen approach:** **Next.js Full-Stack** (App Router). We implemented both frontend UI and backend API routes in one codebase.
+- **Language:** TypeScript for both client and server logic.
+- **Frontend/UI:** React, Tailwind CSS, Radix UI primitives, and reusable custom UI components.
+- **Backend/API:** Next.js route handlers and server components; server-side actions for course and analytics operations.
+- **Authentication & Authorization:** better-auth with session-based login and role-aware routing for **STUDENT** and **TEACHER** users.
+- **Database solution:** PostgreSQL with Prisma ORM (`prisma/schema.prisma`) and Prisma Client.
+- **Database tooling:** Prisma schema migration/push workflows, Prisma Studio, and seed script (`prisma/seed.ts`).
+- **Cloud storage:** AWS S3-compatible file upload integration for course content, submissions, and certificates.
+- **Validation and utilities:** Zod for schema validation, date-fns for date handling, and shared utility modules.
+- **Build/dev tooling:** Next.js build pipeline, ESLint, PostCSS, and TypeScript compiler checks.
+
+## Features
+
+The system supports end-to-end learning management workflows for both instructors and students.
+
+1. **Role-based dashboards**
+	- Separate teacher and student experiences after login.
+	- Supports course management, learning progress tracking, and activity summaries.
+
+2. **Course lifecycle management (Teacher)**
+	- Create, edit, publish/unpublish courses.
+	- Structure courses into modules and attach content, assignments, and quizzes.
+	- Meets project requirements for instructor-side course administration.
+
+3. **Enrollment and learning flow (Student)**
+	- Browse courses, enroll, view course content, and continue learning.
+	- Dashboard and course pages show progress bars and learning status.
+	- Supports objective of providing guided, trackable learning progression.
+
+4. **Assignments and grading**
+	- Students submit assignment work (text/file).
+	- Teachers review, grade, and provide feedback.
+	- Includes pending/reviewed submission views to streamline review workflow.
+
+5. **Quizzes and attempts**
+	- Quiz attempts are stored with pass/fail outcomes and scores.
+	- Enables measurable assessment and contributes to course progress analytics.
+
+6. **Analytics and reporting**
+	- Teacher analytics dashboard for course-level metrics.
+	- Course-specific analytics tab includes enrollment, completion, grading, and module breakdown.
+	- Directly supports objective of data-informed teaching decisions.
+
+7. **Certificates**
+	- Certificates generated and displayed for completed learning outcomes.
+	- Verifiable listing and downloadable certificate files.
+
+8. **Real-time discussion support**
+	- Discussion stream endpoint and message broadcasting support course communication features.
+
+9. **Integrated AI chatbot**
+	- In-dashboard assistant for quick support.
+	- Includes minimize/expand interaction to avoid interrupting core workflows.
+
+Overall, these features satisfy typical course-project requirements: authentication, role-based access, CRUD data management, analytics, file handling, and production-style full-stack architecture.
+
+## User Guide
+
+> Add screenshots in the indicated places (recommended filenames shown below).
+
+### 1) Sign in and access dashboard
+1. Open the app URL.
+2. Log in with a valid teacher or student account.
+3. You will be redirected to the role-specific dashboard.
+
+**Screenshot suggestion:** `docs/screenshots/login-and-dashboard.png`
+
+### 2) Teacher workflow
+
+#### A. Create and publish a course
+1. Go to **Dashboard ¡ú My Courses ¡ú Create Course**.
+2. Enter course title/description and save.
+3. Open the created course and add modules.
+4. Add content, assignments, and quizzes inside modules.
+5. Publish the course when ready.
+
+**Screenshot suggestion:** `docs/screenshots/teacher-create-course.png`
+
+#### B. Review submissions
+1. Go to **Dashboard ¡ú Submissions**.
+2. Use **Pending** tab to open ungraded work.
+3. Enter grade + feedback and submit review.
+4. Check **Reviewed** tab to confirm graded items.
+
+**Screenshot suggestion:** `docs/screenshots/teacher-submissions-tabs.png`
+
+#### C. View analytics
+1. Go to **Dashboard ¡ú Analytics** for platform-level teacher metrics.
+2. Open a specific course and select the **Analytics** tab for course-level insights.
+
+**Screenshot suggestion:** `docs/screenshots/teacher-analytics.png`
+
+### 3) Student workflow
+
+#### A. Enroll and learn
+1. Browse available courses.
+2. Enroll in a course.
+3. Open **Dashboard ¡ú My Courses** and continue from the course page.
+
+**Screenshot suggestion:** `docs/screenshots/student-my-courses.png`
+
+#### B. Submit assignments and take quizzes
+1. Inside a course, open an assignment and submit required work.
+2. Open quizzes and complete attempts.
+3. Track status from dashboard pages.
+
+**Screenshot suggestion:** `docs/screenshots/student-assignment-quiz.png`
+
+#### C. Check certificates
+1. Open **Dashboard ¡ú Certificates**.
+2. View earned certificates and download available files.
+
+**Screenshot suggestion:** `docs/screenshots/student-certificates.png`
+
+### 4) Use chatbot assistant
+1. Use the floating chatbot in dashboard pages.
+2. Ask questions related to learning/workflow.
+3. Minimize or expand the chatbot as needed.
+
+**Screenshot suggestion:** `docs/screenshots/chatbot-minimized-expanded.png`
+
+## Development Guide
+
+### Environment setup and configuration
+
+1. **Prerequisites**
+	- Node.js **20 LTS** (recommended for stable Next.js behavior)
+	- npm (bundled with Node)
+	- PostgreSQL running locally
+
+2. **Install dependencies**
+	- Run: `npm install`
+
+3. **Configure environment variables**
+	- Copy `.env.example` to `.env`.
+	- Set at minimum:
+	  - `DATABASE_URL`
+	  - `BETTER_AUTH_SECRET`
+	  - `BETTER_AUTH_URL`
+	  - `NEXT_PUBLIC_APP_URL`
+
+4. **Role/auth considerations**
+	- Ensure seed users or test users exist for both `TEACHER` and `STUDENT` roles.
+
+### Database initialization
+
+1. Generate Prisma client:
+	- `npm run db:generate`
+
+2. Sync schema to database:
+	- `npm run db:push`
+
+3. Seed initial data:
+	- `npm run db:seed`
+
+4. (Optional) Inspect DB in Prisma Studio:
+	- `npm run db:studio`
+
+If migrations are preferred in your workflow, use `npm run db:migrate` instead of `db:push`.
+
+### Cloud storage configuration
+
+The project supports S3-backed file storage.
+
+1. In `.env`, set:
+	- `AWS_ACCESS_KEY_ID`
+	- `AWS_SECRET_ACCESS_KEY`
+	- `AWS_S3_BUCKET`
+	- `AWS_S3_REGION`
+
+2. Keep upload folder conventions used by the app (`courses`, `assignments`, `submissions`, `certificates`, `profiles`).
+
+3. Verify bucket permissions/CORS allow app uploads and file retrieval.
+
+4. For local-only testing, you may keep these values unset if your storage layer has fallback behavior.
+
+### Local development and testing
+
+1. Start development server:
+	- `npm run dev`
+
+2. Open:
+	- `http://localhost:3000`
+
+3. Recommended manual test checklist:
+	- Login/logout for both roles.
+	- Teacher: create/publish course, add module/content/assignment/quiz.
+	- Student: enroll, submit assignment, attempt quiz.
+	- Teacher: grade submission and verify reviewed tab updates.
+	- Verify progress bars on dashboard and courses pages.
+	- Verify analytics pages/tabs display expected metrics.
+	- Verify certificate listing/download behavior.
+	- Verify chatbot send/minimize/expand behavior.
+
+4. Build verification:
+	- `npm run build`
+
+5. Lint checks:
+	- `npm run lint`
+
+## Deployment Information (if applicable)
+
+## AI Assistance & Verification (Summary)
+
+### Where AI meaningfully contributed
+
+### One representative mistake or limitation in AI output
+
+### How correctness was verified
+
+## Individual Contributions
+
+## Lessons Learned and Concluding Remarks
