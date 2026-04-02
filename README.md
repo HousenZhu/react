@@ -208,15 +208,35 @@ The project supports S3-backed file storage.
 5. Lint checks:
 	- `npm run lint`
 
-## Deployment Information (if applicable)
-
 ## AI Assistance & Verification (Summary)
 
 ### Where AI meaningfully contributed
 
+AI tools were used as an implementation assistant in limited, targeted stages:
+
+- **Architecture and workflow exploration:** validating role-based dashboard flow, analytics structure, and feature decomposition before implementation.
+- **Database/query implementation support:** drafting and refining Prisma query shapes for nested progress, analytics, reviewed submissions, and certificate eligibility.
+- **Debugging support:** identifying and resolving issues such as stale progress logic, route/runtime inconsistencies, and UI regressions (e.g., chatbot and certificate UI behavior).
+- **Documentation support:** drafting structured report sections and improving technical clarity.
+
+AI was not used as an autonomous source of truth; outputs were treated as suggestions and reviewed before integration.
+
 ### One representative mistake or limitation in AI output
 
+A representative limitation was an initially inconsistent progress model that mixed module-level and assessment-level completion, which produced misleading percentages (e.g., lower completion despite quizzes/assignments being done). The team revised the model to a clearer rule based only on **passed quizzes + completed assignments**.
+
+Detailed examples, prompts, and correction history are documented in **ai-session.md**.
+
 ### How correctness was verified
+
+Correctness was verified through standard engineering checks rather than trusting AI output directly:
+
+- **Manual user-flow testing:** teacher and student paths (course creation, enrollment, submissions, grading, analytics, certificates, chatbot behavior).
+- **Data validation in application state/database:** checking that progress, completion, and certificate eligibility aligned with persisted records and expected outcomes.
+- **Build/type checks:** resolving TypeScript and runtime issues before acceptance.
+- **Regression checks:** re-testing related pages after each change (dashboard, course detail, analytics, certificates).
+
+Concrete session-level evidence is referenced in **ai-session.md**.
 
 ## Individual Contributions
 
