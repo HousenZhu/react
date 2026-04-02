@@ -78,7 +78,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 ### 2) Teacher workflow
 
 #### A. Create and publish a course
-1. Go to **Dashboard ¡ú My Courses ¡ú Create Course**.
+1. Go to **Dashboard -> My Courses -> Create Course**.
 2. Enter course title/description and save.
 3. Open the created course and add modules.
 4. Add content, assignments, and quizzes inside modules.
@@ -87,7 +87,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 **Screenshot suggestion:** `docs/screenshots/teacher-create-course.png`
 
 #### B. Review submissions
-1. Go to **Dashboard ¡ú Submissions**.
+1. Go to **Dashboard -> Submissions**.
 2. Use **Pending** tab to open ungraded work.
 3. Enter grade + feedback and submit review.
 4. Check **Reviewed** tab to confirm graded items.
@@ -95,7 +95,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 **Screenshot suggestion:** `docs/screenshots/teacher-submissions-tabs.png`
 
 #### C. View analytics
-1. Go to **Dashboard ¡ú Analytics** for platform-level teacher metrics.
+1. Go to **Dashboard -> Analytics** for platform-level teacher metrics.
 2. Open a specific course and select the **Analytics** tab for course-level insights.
 
 **Screenshot suggestion:** `docs/screenshots/teacher-analytics.png`
@@ -105,7 +105,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 #### A. Enroll and learn
 1. Browse available courses.
 2. Enroll in a course.
-3. Open **Dashboard ¡ú My Courses** and continue from the course page.
+3. Open **Dashboard -> My Courses** and continue from the course page.
 
 **Screenshot suggestion:** `docs/screenshots/student-my-courses.png`
 
@@ -117,7 +117,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 **Screenshot suggestion:** `docs/screenshots/student-assignment-quiz.png`
 
 #### C. Check certificates
-1. Open **Dashboard ¡ú Certificates**.
+1. Open **Dashboard -> Certificates**.
 2. View earned certificates and download available files.
 
 **Screenshot suggestion:** `docs/screenshots/student-certificates.png`
