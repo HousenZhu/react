@@ -78,7 +78,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 ### 2) Teacher workflow
 
 #### A. Create and publish a course
-1. Go to **Dashboard ¡ú My Courses ¡ú Create Course**.
+1. Go to **Dashboard -> My Courses -> Create Course**.
 2. Enter course title/description and save.
 3. Open the created course and add modules.
 4. Add content, assignments, and quizzes inside modules.
@@ -87,7 +87,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 **Screenshot suggestion:** `docs/screenshots/teacher-create-course.png`
 
 #### B. Review submissions
-1. Go to **Dashboard ¡ú Submissions**.
+1. Go to **Dashboard -> Submissions**.
 2. Use **Pending** tab to open ungraded work.
 3. Enter grade + feedback and submit review.
 4. Check **Reviewed** tab to confirm graded items.
@@ -95,7 +95,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 **Screenshot suggestion:** `docs/screenshots/teacher-submissions-tabs.png`
 
 #### C. View analytics
-1. Go to **Dashboard ¡ú Analytics** for platform-level teacher metrics.
+1. Go to **Dashboard -> Analytics** for platform-level teacher metrics.
 2. Open a specific course and select the **Analytics** tab for course-level insights.
 
 **Screenshot suggestion:** `docs/screenshots/teacher-analytics.png`
@@ -105,7 +105,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 #### A. Enroll and learn
 1. Browse available courses.
 2. Enroll in a course.
-3. Open **Dashboard ¡ú My Courses** and continue from the course page.
+3. Open **Dashboard -> My Courses** and continue from the course page.
 
 **Screenshot suggestion:** `docs/screenshots/student-my-courses.png`
 
@@ -117,7 +117,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 **Screenshot suggestion:** `docs/screenshots/student-assignment-quiz.png`
 
 #### C. Check certificates
-1. Open **Dashboard ¡ú Certificates**.
+1. Open **Dashboard -> Certificates**.
 2. View earned certificates and download available files.
 
 **Screenshot suggestion:** `docs/screenshots/student-certificates.png`
@@ -208,15 +208,35 @@ The project supports S3-backed file storage.
 5. Lint checks:
 	- `npm run lint`
 
-## Deployment Information (if applicable)
-
 ## AI Assistance & Verification (Summary)
 
 ### Where AI meaningfully contributed
 
+AI tools were used as an implementation assistant in limited, targeted stages:
+
+- **Architecture and workflow exploration:** validating role-based dashboard flow, analytics structure, and feature decomposition before implementation.
+- **Database/query implementation support:** drafting and refining Prisma query shapes for nested progress, analytics, reviewed submissions, and certificate eligibility.
+- **Debugging support:** identifying and resolving issues such as stale progress logic, route/runtime inconsistencies, and UI regressions (e.g., chatbot and certificate UI behavior).
+- **Documentation support:** drafting structured report sections and improving technical clarity.
+
+AI was not used as an autonomous source of truth; outputs were treated as suggestions and reviewed before integration.
+
 ### One representative mistake or limitation in AI output
 
+A representative limitation was an initially inconsistent progress model that mixed module-level and assessment-level completion, which produced misleading percentages (e.g., lower completion despite quizzes/assignments being done). The team revised the model to a clearer rule based only on **passed quizzes + completed assignments**.
+
+Detailed examples, prompts, and correction history are documented in **ai-session.md**.
+
 ### How correctness was verified
+
+Correctness was verified through standard engineering checks rather than trusting AI output directly:
+
+- **Manual user-flow testing:** teacher and student paths (course creation, enrollment, submissions, grading, analytics, certificates, chatbot behavior).
+- **Data validation in application state/database:** checking that progress, completion, and certificate eligibility aligned with persisted records and expected outcomes.
+- **Build/type checks:** resolving TypeScript and runtime issues before acceptance.
+- **Regression checks:** re-testing related pages after each change (dashboard, course detail, analytics, certificates).
+
+Concrete session-level evidence is referenced in **ai-session.md**.
 
 ## Individual Contributions
 
