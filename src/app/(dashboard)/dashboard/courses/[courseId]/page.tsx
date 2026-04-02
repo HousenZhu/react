@@ -3,6 +3,7 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import { getServerSession } from "@/lib/auth-server";
 import { db } from "@/lib/db";
+import { generateCertificate } from "@/actions/certificate";
 import { Card, CardContent, CardHeader, CardTitle, Badge, Progress, Button, Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui";
 
 interface CoursePageProps {
@@ -26,13 +27,35 @@ export default async function CoursePage({ params }: CoursePageProps) {
       modules: {
         include: {
           contents: true,
-          quizzes: true,
-          assignments: true,
+          quizzes: {
+            include: {
+              attempts: {
+                where: { studentId: user.id },
+                select: { passed: true },
+              },
+            },
+          },
+          assignments: {
+            include: {
+              submissions: {
+                where: { studentId: user.id },
+                select: { status: true },
+              },
+            },
+          },
         },
         orderBy: { order: "asc" },
       },
       enrollments: {
         where: { studentId: user.id },
+      },
+      certificates: {
+        where: { studentId: user.id },
+        select: {
+          id: true,
+          fileUrl: true,
+          certificateNumber: true,
+        },
       },
       _count: {
         select: { enrollments: true },
@@ -54,7 +77,50 @@ export default async function CoursePage({ params }: CoursePageProps) {
   }
 
   if (isOwner) {
-    return <TeacherCourseView course={course} />;
+    const courseAnalytics = await db.course.findFirst({
+      where: {
+        id: params.courseId,
+        teacherId: user.id,
+      },
+      include: {
+        enrollments: {
+          select: {
+            completed: true,
+            progress: true,
+          },
+        },
+        modules: {
+          include: {
+            contents: { select: { id: true } },
+            assignments: {
+              select: {
+                id: true,
+                maxScore: true,
+                submissions: {
+                  select: {
+                    status: true,
+                    grade: true,
+                  },
+                },
+              },
+            },
+            quizzes: {
+              select: {
+                id: true,
+                attempts: {
+                  select: {
+                    passed: true,
+                  },
+                },
+              },
+            },
+          },
+          orderBy: { order: "asc" },
+        },
+      },
+    });
+
+    return <TeacherCourseView course={course} analytics={courseAnalytics} />;
   }
 
   return <StudentCourseView course={course} enrollment={enrollment} userId={user.id} />;
@@ -72,13 +138,48 @@ interface CourseData {
     description: string | null;
     order: number;
     contents: Array<{ id: string; title: string; type: string }>;
-    quizzes: Array<{ id: string; title: string }>;
-    assignments: Array<{ id: string; title: string; deadline: Date }>;
+    quizzes: Array<{ id: string; title: string; attempts: Array<{ passed: boolean }> }>;
+    assignments: Array<{ id: string; title: string; deadline: Date; submissions: Array<{ status: string }> }>;
   }>;
+  certificates?: Array<{ id: string; fileUrl: string; certificateNumber: string }>;
   _count: { enrollments: number };
 }
 
-function TeacherCourseView({ course }: { course: CourseData }) {
+function TeacherCourseView({ course, analytics }: { course: CourseData; analytics: any }) {
+  const totalStudents = analytics?.enrollments?.length ?? 0;
+  const completedStudents = analytics?.enrollments?.filter((e: any) => e.completed).length ?? 0;
+  const avgProgress =
+    totalStudents > 0
+      ? Math.round(
+          analytics.enrollments.reduce((sum: number, e: any) => sum + (e.progress ?? 0), 0) /
+            totalStudents
+        )
+      : 0;
+
+  const allAssignments = analytics?.modules?.flatMap((m: any) => m.assignments) ?? [];
+  const allQuizzes = analytics?.modules?.flatMap((m: any) => m.quizzes) ?? [];
+  const allSubmissions = allAssignments.flatMap((a: any) => a.submissions ?? []);
+  const allAttempts = allQuizzes.flatMap((q: any) => q.attempts ?? []);
+
+  const gradedSubmissions = allSubmissions.filter((s: any) => s.status === "GRADED").length;
+  const passedAttempts = allAttempts.filter((a: any) => a.passed).length;
+
+  const completionRate = totalStudents > 0 ? Math.round((completedStudents / totalStudents) * 100) : 0;
+  const gradingRate = allSubmissions.length > 0 ? Math.round((gradedSubmissions / allSubmissions.length) * 100) : 0;
+  const quizPassRate = allAttempts.length > 0 ? Math.round((passedAttempts / allAttempts.length) * 100) : 0;
+
+  let gradePctSum = 0;
+  let gradedCount = 0;
+  for (const assignment of allAssignments) {
+    for (const submission of assignment.submissions ?? []) {
+      if (submission.status === "GRADED" && submission.grade !== null) {
+        gradePctSum += (submission.grade / assignment.maxScore) * 100;
+        gradedCount += 1;
+      }
+    }
+  }
+  const avgGradePct = gradedCount > 0 ? Math.round(gradePctSum / gradedCount) : null;
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
@@ -174,14 +275,103 @@ function TeacherCourseView({ course }: { course: CourseData }) {
         </TabsContent>
 
         <TabsContent value="analytics">
-          <Card>
-            <CardHeader>
-              <CardTitle>Course Analytics</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-gray-500">Analytics coming soon...</p>
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+            <div className="grid md:grid-cols-4 gap-4">
+              <Card>
+                <CardContent className="p-5">
+                  <p className="text-2xl font-bold text-gray-900">{totalStudents}</p>
+                  <p className="text-sm text-gray-500">Enrolled Students</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-5">
+                  <p className="text-2xl font-bold text-green-600">{completionRate}%</p>
+                  <p className="text-sm text-gray-500">Completion Rate</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-5">
+                  <p className="text-2xl font-bold text-blue-600">{avgProgress}%</p>
+                  <p className="text-sm text-gray-500">Average Progress</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardContent className="p-5">
+                  <p className="text-2xl font-bold text-purple-600">{avgGradePct !== null ? `${avgGradePct}%` : "N/A"}</p>
+                  <p className="text-sm text-gray-500">Average Grade</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-4">
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Submissions</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold text-gray-900">{allSubmissions.length}</p>
+                  <p className="text-sm text-gray-500 mt-1">{gradedSubmissions} graded ({gradingRate}%)</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Quiz Attempts</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold text-gray-900">{allAttempts.length}</p>
+                  <p className="text-sm text-gray-500 mt-1">{passedAttempts} passed ({quizPassRate}%)</p>
+                </CardContent>
+              </Card>
+              <Card>
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base">Course Status</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold text-gray-900">{completedStudents}</p>
+                  <p className="text-sm text-gray-500 mt-1">students completed</p>
+                </CardContent>
+              </Card>
+            </div>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Module Breakdown</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {analytics?.modules?.length === 0 ? (
+                  <p className="text-gray-500">No modules available.</p>
+                ) : (
+                  <div className="space-y-4">
+                    {analytics.modules.map((module: any, index: number) => {
+                      const moduleSubmissions = module.assignments.flatMap((a: any) => a.submissions ?? []);
+                      const moduleAttempts = module.quizzes.flatMap((q: any) => q.attempts ?? []);
+                      const moduleGraded = moduleSubmissions.filter((s: any) => s.status === "GRADED").length;
+                      const modulePassed = moduleAttempts.filter((a: any) => a.passed).length;
+                      const moduleTotal = moduleSubmissions.length + moduleAttempts.length;
+                      const moduleDone = moduleGraded + modulePassed;
+                      const modulePct = moduleTotal > 0 ? Math.round((moduleDone / moduleTotal) * 100) : 0;
+
+                      return (
+                        <div key={module.id} className="border rounded-lg p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <p className="font-medium text-gray-900">Module {index + 1}: {module.title}</p>
+                            <span className="text-sm font-medium text-gray-600">{modulePct}%</span>
+                          </div>
+                          <Progress value={modulePct} />
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 text-sm text-gray-500">
+                            <span>{module.contents.length} contents</span>
+                            <span>{module.assignments.length} assignments</span>
+                            <span>{module.quizzes.length} quizzes</span>
+                            <span>{moduleDone}/{moduleTotal} completed</span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
     </div>
@@ -203,6 +393,34 @@ async function StudentCourseView({
   enrollment: EnrollmentData;
   userId: string;
 }) {
+  const existingCertificate = course.certificates?.[0] ?? null;
+  const totalItems =
+    course.modules.reduce(
+      (sum, module) => sum + module.assignments.length + module.quizzes.length,
+      0
+    );
+
+  const completedItems =
+    course.modules.reduce((sum, module) => {
+      const completedAssignments = module.assignments.filter((assignment) =>
+        assignment.submissions.length > 0
+      ).length;
+      const completedQuizzes = module.quizzes.filter((quiz) =>
+        quiz.attempts.some((attempt) => attempt.passed)
+      ).length;
+      return sum + completedAssignments + completedQuizzes;
+    }, 0);
+
+  const completionPct =
+    totalItems > 0 ? Math.round((completedItems / totalItems) * 100) : 0;
+
+  async function handleGenerateCertificate() {
+    "use server";
+
+    await generateCertificate(course.id);
+    redirect("/dashboard/certificates");
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-start justify-between">
@@ -218,14 +436,43 @@ async function StudentCourseView({
         </div>
         <div className="text-right">
           <p className="text-sm text-gray-500">Progress</p>
-          <p className="text-2xl font-bold text-blue-600">{enrollment.progress}%</p>
+          <p className="text-2xl font-bold text-blue-600">{completionPct}%</p>
         </div>
       </div>
 
-      <Progress value={enrollment.progress} className="h-3" />
+      <Progress value={completionPct} className="h-3" />
 
       {course.description && (
         <p className="text-gray-600">{course.description}</p>
+      )}
+
+      {(completionPct >= 100 || existingCertificate) && (
+        <Card className="border-green-200 bg-green-50/60">
+          <CardContent className="p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <p className="text-lg font-semibold text-gray-900">Course Completion Reward</p>
+              <p className="text-sm text-gray-600">
+                {existingCertificate
+                  ? "Your certificate is ready to view or download."
+                  : "You have completed this course and can now generate your certificate."}
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {existingCertificate?.fileUrl ? (
+                <a href={existingCertificate.fileUrl} target="_blank" rel="noopener noreferrer">
+                  <Button variant="outline">Download Certificate</Button>
+                </a>
+              ) : (
+                <form action={handleGenerateCertificate}>
+                  <Button type="submit">Generate Certificate</Button>
+                </form>
+              )}
+              <Link href="/dashboard/certificates">
+                <Button variant="outline">View Certificates</Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       <div className="space-y-4">
