@@ -72,6 +72,8 @@ Overall, these features satisfy typical course-project requirements: authenticat
 
 **Screenshot suggestion:** `docs/screenshots/login-and-dashboard.png`
 
+![Login and Dashboard](docs/screenshots/LoginPage.png)
+
 ### 2) Teacher workflow
 
 #### A. Create and publish a course
@@ -83,6 +85,8 @@ Overall, these features satisfy typical course-project requirements: authenticat
 
 **Screenshot suggestion:** `docs/screenshots/teacher-create-course.png`
 
+![Teacher Create Course](docs/screenshots/CreateCourse.png)
+
 #### B. Review submissions
 1. Go to **Dashboard -> Submissions**.
 2. Use **Pending** tab to open ungraded work.
@@ -91,11 +95,15 @@ Overall, these features satisfy typical course-project requirements: authenticat
 
 **Screenshot suggestion:** `docs/screenshots/teacher-submissions-tabs.png`
 
+![Teacher Review Submissions](docs/screenshots/ReviewSubmission.png)
+
 #### C. View analytics
 1. Go to **Dashboard -> Analytics** for platform-level teacher metrics.
 2. Open a specific course and select the **Analytics** tab for course-level insights.
 
 **Screenshot suggestion:** `docs/screenshots/teacher-analytics.png`
+
+![Teacher Analytics](docs/screenshots/Analytics.png)
 
 ### 3) Student workflow
 
@@ -106,6 +114,8 @@ Overall, these features satisfy typical course-project requirements: authenticat
 
 **Screenshot suggestion:** `docs/screenshots/student-my-courses.png`
 
+![Student My Courses](docs/screenshots/StudentCourse.png)
+
 #### B. Submit assignments and take quizzes
 1. Inside a course, open an assignment and submit required work.
 2. Open quizzes and complete attempts.
@@ -113,11 +123,15 @@ Overall, these features satisfy typical course-project requirements: authenticat
 
 **Screenshot suggestion:** `docs/screenshots/student-assignment-quiz.png`
 
+![Student Assignments and Quizzes](docs/screenshots/Assigments.png)
+
 #### C. Check certificates
 1. Open **Dashboard -> Certificates**.
 2. View earned certificates and download available files.
 
 **Screenshot suggestion:** `docs/screenshots/student-certificates.png`
+
+![Student Certificates](docs/screenshots/Certificate.png)
 
 ### 4) Use chatbot assistant
 1. Use the floating chatbot in dashboard pages.
@@ -125,6 +139,8 @@ Overall, these features satisfy typical course-project requirements: authenticat
 3. Minimize or expand the chatbot as needed.
 
 **Screenshot suggestion:** `docs/screenshots/chatbot-minimized-expanded.png`
+
+![AI Chatbot](docs/screenshots/AIChatbot.png)
 
 ## Development Guide
 
