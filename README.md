@@ -109,8 +109,6 @@ Overall, these features satisfy typical course-project requirements: authenticat
 
 ## User Guide
 
-> Add screenshots in the indicated places (recommended filenames shown below).
-
 ### 1) Sign in and access dashboard
 1. Open the app URL.
 2. Log in with a valid teacher or student account.
@@ -179,7 +177,7 @@ Overall, these features satisfy typical course-project requirements: authenticat
 
 ![AI Chatbot](docs/screenshots/AIChatbot.png)
 
-## Development Guide
+## Development Guide (“Credentials sent to TA”)
 
 ### Environment setup and configuration
 
