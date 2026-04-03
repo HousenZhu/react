@@ -4,7 +4,7 @@
 
 | Name | Student Number | Email |
 |------|---------------|-------|
-| [Housen Zhu] | [1008117477] | [housen.zhu@mail.utoronto.ca] |
+| [Housen Zhu] | [1008117477] | [benjamin.zhu@mail.utoronto.ca] |
 | [Zhiyuan Diao] | [1002315014] | [zhiyuan.diao@mail.utoronto.ca] |
 | [Tianrui Du] | [1005747417] | [sophieee.du@mail.utoronto.ca] |
 
@@ -14,13 +14,23 @@ https://www.youtube.com/watch?v=XEOUFniIkoA
 
 ## Motivation
 
-Our team chose to develop a Personalized Learning Platform to address limitations in existing learning management systems (LMS). While many platforms provide basic content delivery, they often lack meaningful interaction, integrated feedback, and personalized learning support.
+### Problem Statement
 
-Students frequently struggle to track their progress, stay engaged, and receive timely insights into their performance. At the same time, educators must rely on multiple disconnected tools for managing courses, assignments, grading, and communication. This fragmentation creates inefficiencies and increases administrative workload.
+As education increasingly shifts toward digital and hybrid formats, learning management systems have become central to course delivery. However, many existing platforms primarily serve as content repositories rather than interactive, personalized learning environments. Educators typically upload slides, PDFs, and recorded lectures, but tools for meaningful engagement, progress tracking, and integrated feedback are often limited.
 
-The significance of this project lies in creating a unified, full-stack platform that integrates these essential functionalities into a single system. By combining course management, progress tracking, discussion forums, and feedback mechanisms, the platform improves both the learning experience for students and the teaching workflow for educators.
+Students may struggle to monitor their performance, stay motivated, or receive timely insights into their learning progress. At the same time, educators frequently rely on multiple disconnected systems for assignments, grading, communication, and deadline management. This fragmentation increases administrative workload and creates an inconsistent user experience. The lack of integration between content delivery, assessment, analytics, and discussion tools results in inefficiencies for both teachers and students.
 
-As digital education continues to expand, there is a strong need for platforms that prioritize integration, usability, and personalized learning, making this project both relevant and impactful.
+### Rationale and Significance
+
+The proposed Personalized Learning Platform addresses these issues by consolidating essential educational functions into a unified system. It integrates role-based authentication, course management, quizzes and assignments, progress tracking, discussion forums, calendar support, and certificate generation within a single platform.
+
+Using PostgreSQL for structured relational data and cloud storage for scalable content management ensures reliability and performance. Students benefit from clear visibility into deadlines, grades, and completion status, supporting accountability and engagement.
+
+As digital learning continues to expand, there is a growing need for platforms that prioritize usability, integration, and personalized feedback. This project addresses that need while demonstrating practical full-stack engineering skills applied to a real-world educational challenge.
+
+### Target User Groups
+
+The primary users are educators and students. Educators require tools to create and manage courses, distribute materials, evaluate assignments, and monitor student progress. Students need structured learning paths, interactive assessments, timely feedback, and collaborative discussion spaces. Educational institutions and training organizations may also benefit from a centralized, scalable solution.
 
 ## Objectives
 
