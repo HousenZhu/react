@@ -7,6 +7,18 @@ type Message = {
   content: string;
 };
 
+function normalizeMessageContent(content: string) {
+  return content.replace(/\r\n/g, "\n").replace(/\\n/g, "\n");
+}
+
+function renderMessageContent(content: string) {
+  return normalizeMessageContent(content).split("\n").map((line, index) => (
+    <div key={`${index}-${line}`} className="min-h-[1.25rem]">
+      {line || "\u00A0"}
+    </div>
+  ));
+}
+
 export default function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -30,10 +42,14 @@ export default function Chatbot() {
     });
 
     const data = await res.json();
+    const assistantMessage =
+      typeof data.message === "string"
+        ? normalizeMessageContent(data.message)
+        : "";
 
     setMessages([
       ...newMessages,
-      { role: "assistant", content: data.message },
+      { role: "assistant", content: assistantMessage },
     ]);
 
     setLoading(false);
@@ -82,8 +98,11 @@ export default function Chatbot() {
             <p className="text-gray-400 text-sm text-center mt-8">Ask me anything!</p>
           )}
           {messages.map((m, i) => (
-            <div key={i} className="mb-2">
-              <b>{m.role === "user" ? "You" : "AI"}:</b> {m.content}
+            <div key={i} className="mb-3">
+              <b>{m.role === "user" ? "You" : "AI"}:</b>
+              <div className="mt-1 break-words text-sm">
+                {renderMessageContent(m.content)}
+              </div>
             </div>
           ))}
           {loading && <p className="text-gray-400 text-sm">AI is thinking...</p>}
