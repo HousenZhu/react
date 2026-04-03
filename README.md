@@ -8,6 +8,10 @@
 | [Zhiyuan Diao] | [1002315014] | [zhiyuan.diao@mail.utoronto.ca] |
 | [Tianrui Du] | [1005747417] | [sophieee.du@mail.utoronto.ca] |
 
+## Video Demo
+
+https://www.youtube.com/watch?v=XEOUFniIkoA
+
 ## Motivation
 
 Our team chose to develop a Personalized Learning Platform to address limitations in existing learning management systems (LMS). While many platforms provide basic content delivery, they often lack meaningful interaction, integrated feedback, and personalized learning support.
